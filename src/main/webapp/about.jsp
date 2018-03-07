@@ -16,7 +16,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CodeU Chat App</title>
+  <title>Byte Me's Chat App</title>
   <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -36,7 +36,7 @@
     <div
       style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
 
-      <h1>About the CodeU Chat App</h1>
+      <h1>About Byte Me's Chat App</h1>
       <p>
         This is an example chat application designed to be a starting point
         for your CodeU project team work. Here's some stuff to think about:
@@ -57,13 +57,13 @@
           internationalization.</li>
       </ul>
 
-      <p>
-        This is your code now. Get familiar with it and get comfortable
-        working with your team to plan and make changes. Start by updating the
-        homepage and this about page to tell your users more about your team.
-        This page should also be used to describe the features and improvements
-        you've added.
-      </p>
+      <h1>Team Byte Me</h1>    
+      <ul>
+        <li><strong>Luis Loza</strong></li>
+        <li><strong>Cari Gan</strong></li>
+        <li><strong>Joyaan Bhesania</strong></li>
+        <li><strong>Linda Yang</strong></li>
+      </ul>
     </div>
   </div>
 </body>
