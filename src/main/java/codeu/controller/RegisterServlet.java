@@ -5,18 +5,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import codeu.model.store.basic.UserStore;
+import codeu.model.data.User;
+import java.time.Instant;
+import java.util.UUID;
 
 /**
 * Servlet class responsible for user registration.
 */
 public class RegisterServlet extends HttpServlet {
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException {
+ @Override
+ public void doGet(HttpServletRequest request, HttpServletResponse response)
+     throws IOException, ServletException {
 
-    request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-    }
+   request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
+ }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -31,7 +35,30 @@ public class RegisterServlet extends HttpServlet {
         return;
     }
 
-    response.getWriter().println("<p>Username: " + username + "</p>");
-    response.getWriter().println("<p>Password: " + password + "</p>");
+    if (userStore.isUserRegistered(username)) {
+        request.setAttribute("error", "That username is already taken.");
+        request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
+        return;
     }
+
+    User user = new User(UUID.randomUUID(), username, password, Instant.now());
+    userStore.addUser(user);
+
+    response.sendRedirect("/login");
+    }
+    private UserStore userStore;
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        setUserStore(UserStore.getInstance());
+    }
+
+    /**
+    * Sets the UserStore used by this servlet. This function provides a common setup method
+    * for use by the test framework or the servlet's init() function.
+    */
+    void setUserStore(UserStore userStore) {
+        this.userStore = userStore;
+    }
+
 }
