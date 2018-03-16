@@ -18,3 +18,4 @@ import javax.servlet.http.HttpServletResponse;
             response.getWriter().println("<h1>RegisterServlet GET request.</h1>");
         }
     }
+
