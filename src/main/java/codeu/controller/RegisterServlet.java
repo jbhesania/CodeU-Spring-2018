@@ -26,8 +26,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-
-
+        
         request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
     }
 
@@ -45,9 +44,9 @@ public class RegisterServlet extends HttpServlet {
         }
 
         if (userStore.isUserRegistered(username)) {
-        request.setAttribute("error", "That username is already taken.");
-        request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-        return;
+            request.setAttribute("error", "That username is already taken.");
+            request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
+            return;
         }
 
         User user = new User(UUID.randomUUID(), username, password, Instant.now());
