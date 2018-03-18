@@ -25,18 +25,18 @@ import java.util.UUID;
  * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
  * instance.
  */
-public class UserStore {
+public class  {
 
-  /** Singleton instance of UserStore. */
-  private static UserStore instance;
+  /** Singleton instance of . */
+  private static  instance;
 
   /**
-   * Returns the singleton instance of UserStore that should be shared between all servlet classes.
+   * Returns the singleton instance of  that should be shared between all servlet classes.
    * Do not call this function from a test; use getTestInstance() instead.
    */
-  public static UserStore getInstance() {
+  public static  getInstance() {
     if (instance == null) {
-      instance = new UserStore(PersistentStorageAgent.getInstance());
+      instance = new (PersistentStorageAgent.getInstance());
     }
     return instance;
   }
@@ -46,8 +46,8 @@ public class UserStore {
    *
    * @param persistentStorageAgent a mock used for testing
    */
-  public static UserStore getTestInstance(PersistentStorageAgent persistentStorageAgent) {
-    return new UserStore(persistentStorageAgent);
+  public static  getTestInstance(PersistentStorageAgent persistentStorageAgent) {
+    return new (persistentStorageAgent);
   }
 
   /**
@@ -59,7 +59,7 @@ public class UserStore {
   private List<User> users;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
-  private UserStore(PersistentStorageAgent persistentStorageAgent) {
+  private (PersistentStorageAgent persistentStorageAgent) {
     this.persistentStorageAgent = persistentStorageAgent;
     users = new ArrayList<>();
   }
@@ -115,7 +115,7 @@ public class UserStore {
   }
 
   /**
-   * Sets the List of Users stored by this UserStore. This should only be called once, when the data
+   * Sets the List of Users stored by this . This should only be called once, when the data
    * is loaded from Datastore.
    */
   public void setUsers(List<User> users) {
