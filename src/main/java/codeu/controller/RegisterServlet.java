@@ -1,65 +1,83 @@
 package codeu.controller;
 
 import java.io.IOException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import codeu.model.store.basic.UserStore;
+import javax.servlet.http.HttpSession;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import codeu.model.data.User;
-import java.time.Instant;
-import java.util.UUID;
+import codeu.model.store.basic.UserStore;
 
-/**
-* Servlet class responsible for user registration.
-*/
-public class RegisterServlet extends HttpServlet {
+public class RegisterServletTest {
+
+    private RegisterServlet registerServlet;
+    private HttpServletRequest mockRequest;
+    private HttpServletResponse mockResponse;
+    private RequestDispatcher mockRequestDispatcher;
+    private UserStore mockUserStore;
+    private HttpSession mockSession;
+    private ArgumentCaptor<User> userArgumentCaptor;
+
+    @Before
+    public void setup() {
+        registerServlet = new RegisterServlet();
+        mockRequest = Mockito.mock(HttpServletRequest.class);
+        mockResponse = Mockito.mock(HttpServletResponse.class);
+        mockRequestDispatcher = Mockito.mock(RequestDispatcher.class);
+        mockUserStore = Mockito.mock(UserStore.class);
+        mockSession = Mockito.mock(HttpSession.class);
+        userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/register.jsp"))
+            .thenReturn(mockRequestDispatcher);
+        Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
+    }
+
+    @Test
+    public void testDoGet() throws IOException, ServletException {
+        registerServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+    }
+
+    @Test
+    public void testDoPost_BadUsername() throws IOException, ServletException {
+        Mockito.when(mockRequest.getParameter("username")).thenReturn("bad !@#$% username");
+
+        registerServlet.doPost(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest)
+            .setAttribute("error", "Please enter only letters, numbers, and spaces.");
+        Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+    }
+
+    @Test
+    public void testDoPost_ExistingUser() throws IOException, ServletException {
+        Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
+        registerServlet.setUserStore(mockUserStore);
+
+        Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+
+        registerServlet.doPost(mockRequest, mockResponse);
+
+        Mockito.verify(mockUserStore, Mockito.never()).addUser(Mockito.any(User.class));
+    }
+
+    @Test
+    public void testDoPost_NewUser() throws IOException, ServletException {
+        Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(false);
+        registerServlet.setUserStore(mockUserStore);
     
-    private UserStore userStore;
- 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        setUserStore(UserStore.getInstance());
-    }
-
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException {
-        
-        request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException {
-
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-
-        if (!username.matches("[\\w*\\s*]*")) {
-            request.setAttribute("error", "Please enter only letters, numbers, and spaces.");
-            request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-            return;
-        }
-
-        if (userStore.isUserRegistered(username)) {
-            request.setAttribute("error", "That username is already taken.");
-            request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-            return;
-        }
-
-        User user = new User(UUID.randomUUID(), username, password, Instant.now());
-        userStore.addUser(user);
-        response.sendRedirect("/login");
+        Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
     
-    }
-
-    /**
-     * Sets the UserStore used by this servlet. This function provides a common setup method
-     * for use by the test framework or the servlet's init() function.
-     */
-    void setUserStore(UserStore userStore) {
-        this.userStore = userStore;
+        registerServlet.doPost(mockRequest, mockResponse);
+    
+        Mockito.verify(mockUserStore).addUser(userArgumentCaptor.capture());
+        Assert.assertEquals(userArgumentCaptor.getValue().getName(), "test username");
     }
 }
