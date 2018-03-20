@@ -69,6 +69,11 @@ public class LoginServlet extends HttpServlet {
     String username = request.getParameter("username");
     String password = request.getParameter("password");
 
+    if (username == null || password == null) {
+      request.setAttribute("error", "Missing username or password.");
+      request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+      return;
+    }
     if (userStore.isUserRegistered(username)) {
       User user = userStore.getUser(username);
       if (password.equals(user.getPassword())) {
@@ -81,7 +86,7 @@ public class LoginServlet extends HttpServlet {
       }
     }
     else {
-      request.setAttribute("error", "Invalid password.");
+      request.setAttribute("error", "Invalid username.");
       request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
     }
   }
