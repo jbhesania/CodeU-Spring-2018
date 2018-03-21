@@ -113,7 +113,6 @@ public class LoginServletTest {
     User mockUser = Mockito.mock(User.class);
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
     Mockito.when(mockUserStore.getUser("test username")).thenReturn(mockUser);
-
     String mockUserPasswordHashed = BCrypt.hashpw("not password", BCrypt.gensalt());
     Mockito.when(mockUser.getPassword()).thenReturn(mockUserPasswordHashed);
     loginServlet.setUserStore(mockUserStore);

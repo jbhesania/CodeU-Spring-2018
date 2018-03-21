@@ -32,8 +32,7 @@ public class RegisterServlet extends HttpServlet {
     String password = request.getParameter("password");
     String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
-
-        if (!username.matches("[\\w*\\s*]*")) {
+    if (!username.matches("[\\w*\\s*]*")) {
         request.setAttribute("error", "Please enter only letters, numbers, and spaces.");
         request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
         return;
