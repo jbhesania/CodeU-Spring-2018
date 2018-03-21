@@ -16,17 +16,17 @@ package codeu.controller;
 
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
-import java.io.IOException;
+import org.junit.Before;
+import org.junit.Test;
+import org.mindrot.jbcrypt.BCrypt;
+import org.mockito.Mockito;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import java.io.IOException;
 
 public class LoginServletTest {
 
@@ -113,7 +113,9 @@ public class LoginServletTest {
     User mockUser = Mockito.mock(User.class);
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
     Mockito.when(mockUserStore.getUser("test username")).thenReturn(mockUser);
-    Mockito.when(mockUser.getPassword()).thenReturn("not password");
+
+    String mockUserPasswordHashed = BCrypt.hashpw("not password", BCrypt.gensalt());
+    Mockito.when(mockUser.getPassword()).thenReturn(mockUserPasswordHashed);
     loginServlet.setUserStore(mockUserStore);
 
     HttpSession mockSession = Mockito.mock(HttpSession.class);
@@ -136,7 +138,8 @@ public class LoginServletTest {
     User mockUser = Mockito.mock(User.class);
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
     Mockito.when(mockUserStore.getUser("test username")).thenReturn(mockUser);
-    Mockito.when(mockUser.getPassword()).thenReturn("test password");
+    String mockUserPasswordHashed = BCrypt.hashpw("test password", BCrypt.gensalt());
+    Mockito.when(mockUser.getPassword()).thenReturn(mockUserPasswordHashed);
     loginServlet.setUserStore(mockUserStore);
 
     HttpSession mockSession = Mockito.mock(HttpSession.class);
