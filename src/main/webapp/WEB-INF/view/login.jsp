@@ -37,6 +37,7 @@
       <a href="/register">Register</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <a href="/adminpage">Admin Page</a>
   </nav>
 
   <div id="container">
