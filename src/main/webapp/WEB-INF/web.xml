@@ -86,4 +86,14 @@
     <url-pattern>/adminpage</url-pattern>
   </servlet-mapping>
 
+  <servlet>
+    <servlet-name>ProfilePageServlet</servlet-name>
+    <url-pattern>codeu.controller.ProfilePageServlet</url-pattern>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ProfilePageServlet</servlet-name>
+    <url-pattern>/users/*</url-pattern>
+  </servlet-mapping>
+
 </web-app>

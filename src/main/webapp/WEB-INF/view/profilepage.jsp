@@ -13,13 +13,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
-<%@ page import="java.util.List" %>
-<%@ page import="codeu.model.data.Conversation" %>
-<%@ page import="codeu.model.data.Message" %>
+<%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%
-Conversation conversation = (Conversation) request.getAttribute("conversation");
-List<Message> messages = (List<Message>) request.getAttribute("messages");
+User user = (User) request.getAttribute("user");
 %>
 
 <!DOCTYPE html>
@@ -35,17 +32,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
       overflow-y: scroll
     }
   </style>
-
-  <script>
-    // scroll the chat div to the bottom
-    function scrollChat() {
-      var chatDiv = document.getElementById('chat');
-      chatDiv.scrollTop = chatDiv.scrollHeight;
-    };
-  </script>
 </head>
-<body onload="scrollChat()">
 
+<body>
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
@@ -61,41 +50,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
   <div id="container">
 
-    <h1><%= conversation.getTitle() %>
+    <h1><%= user.getName() %>'s Profile Page
       <a href="" style="float: right">&#8635;</a></h1>
-
-    <hr/>
-
-    <div id="chat">
-      <ul>
-    <%
-      for (Message message : messages) {
-        String author = UserStore.getInstance()
-          .getUser(message.getAuthorId()).getName();
-    %>
-      <li><a href="/users/<%= author %>:"> <%= author %></a>
-      <%= message.getContent() %></li>
-    <%
-      }
-    %>
-      </ul>
-    </div>
-
-    <hr/>
-
-    <% if (request.getSession().getAttribute("user") != null) { %>
-    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <input type="text" name="message">
-        <br/>
-        <button type="submit">Send</button>
-    </form>
-    <% } else { %>
-      <p><a href="/login">Login</a> to send a message.</p>
-    <% } %>
-
-    <hr/>
 
   </div>
 
-</body>
+  </body>
 </html>
