@@ -88,7 +88,7 @@
 
   <servlet>
     <servlet-name>ProfilePageServlet</servlet-name>
-    <url-pattern>codeu.controller.ProfilePageServlet</url-pattern>
+    <servlet-class>codeu.controller.ProfilePageServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

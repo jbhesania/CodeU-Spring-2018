@@ -22,7 +22,7 @@ User user = (User) request.getAttribute("user");
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= conversation.getTitle() %></title>
+  <title><%= user.getName() %></title>
   <link rel="stylesheet" href="/css/main.css" type="text/css">
 
   <style>
