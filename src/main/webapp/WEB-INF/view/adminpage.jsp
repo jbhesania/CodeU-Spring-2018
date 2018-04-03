@@ -37,7 +37,13 @@
             <li>Most active user:</li>
             <li>Newest user:</li>
         </ul>
-  
+
+        <h2>Import Data</h2>
+        <form action = "UploadServlet" method = "post" enctype = "multipart/form-data">
+            File:
+            <input type="file" name="file" id="file" /> <br/>
+            <input type="submit" value="Upload" name="upload" id="upload" />
+        </form>
     </div>
   </body>
 </html> 
