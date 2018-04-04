@@ -7,7 +7,9 @@ package codeu.controller;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
-import codeu.model.store.persistence.PersistentStorageAgent;
+import codeu.model.store.basic.ConversationStore;
+import codeu.model.store.basic.MessageStore;
+import codeu.model.store.basic.UserStore;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
@@ -30,17 +32,30 @@ import java.util.UUID;
         maxRequestSize=1024*1024*50)   // 50MB
 public class UploadServlet extends HttpServlet {
 
-    private PersistentStorageAgent storeAgent;
+    private ConversationStore conversationStore;
+    private MessageStore messageStore;
+    private UserStore userStore;
+
     private HashMap<String, User> users;
 
     public void init() throws ServletException {
         super.init();
-        setStorageAgent(PersistentStorageAgent.getInstance());
+        setConversationStore(ConversationStore.getInstance());
+        setMessageStore(MessageStore.getInstance());
+        setUserStore(UserStore.getInstance());
         users = new HashMap<>();
     }
 
-    void setStorageAgent(PersistentStorageAgent storeAgent) {
-        this.storeAgent = storeAgent;
+    void setConversationStore(ConversationStore conversationStore) {
+        this.conversationStore = conversationStore;
+    }
+
+    void setMessageStore(MessageStore messageStore) {
+        this.messageStore = messageStore;
+    }
+
+    void setUserStore(UserStore userStore) {
+        this.userStore = userStore;
     }
 
     @Override
@@ -99,7 +114,7 @@ public class UploadServlet extends HttpServlet {
                                 "temppassword",
                                 convoTime.plusMillis(plusMillis));
                         users.put(name, currUser);
-                        storeAgent.writeThrough(currUser);
+                        userStore.addUser(currUser);
                     } else {
                         currUser = users.get(name);
                     }
@@ -112,7 +127,7 @@ public class UploadServlet extends HttpServlet {
                             currUser.getId(),
                             fileName,
                             convoTime);
-                    storeAgent.writeThrough(convo);
+                    conversationStore.addConversation(convo);
                 }
 
                 // adds message only if convo & user have been added
@@ -123,19 +138,25 @@ public class UploadServlet extends HttpServlet {
                             currUser.getId(),
                             cleanedMessageContent,
                             convoTime.plusMillis(plusMillis));
-                    storeAgent.writeThrough(message);
+                    messageStore.addMessage(message);
                 }
             } catch (NumberFormatException nfe) {
                 continue;
             }
         }
 
+        br.close();
+        filecontent.close();
+
         // if goes through file without storing convo, then it was formatted incorrectly
         if (convo == null) {
             request.setAttribute("error", "Incorrect file format.");
             request.getRequestDispatcher("/WEB-INF/view/adminpage.jsp").forward(request, response);
             return;
+        } else {
+            response.sendRedirect("/chat/" + fileName);
         }
+
     }
 
     private String getFileName(final Part part) {
