@@ -8,6 +8,6 @@
         <title>Upload</title>
     </head>
     <body>
-        <h2>${requestScope.message}</h2>
+        <h2>Successfully Uploaded!</h2>
     </body>
 </html>
