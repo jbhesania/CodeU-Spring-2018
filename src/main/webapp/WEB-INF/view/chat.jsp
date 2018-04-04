@@ -1,5 +1,4 @@
 <%--
-TODO line 76 add colon
   Copyright 2017 Google Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,7 +73,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
     %>
-      <li><a href="/users/<%= author %>"> <%= author %></a>
+      <li><a href="/users/<%= author %>"> <%= author %>:</a>
       <%= message.getContent() %></li>
     <%
       }
