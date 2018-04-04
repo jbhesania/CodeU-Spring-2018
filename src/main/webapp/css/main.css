@@ -20,19 +20,28 @@ body {
   font-size: 18px;
   line-height: 1.6;
   color: #444;
-  background-color: #eeeeee;
+  background-color: #f7f5f5;
 }
 
 nav {
-  background-color: #283593;
+  background-color: rgb(56, 168, 88);
+}
+
+hr{
+  border-top: 2px solid rgb(56, 168, 88);
 }
 
 nav a {
+  transition-duration: 0.2s;
   color: white;
   display: inline-block;
   font-size: 24px;
-  margin: 15px;
+  padding: 15px;
   text-decoration: none;
+}
+
+nav a:hover{
+  color: rgb(255, 252, 208);
 }
 
 #navTitle {
@@ -46,7 +55,7 @@ nav a {
 }
 
 h1 {
-  color: #757575;
+  color: #5e5e5e;
 }
 
 input {
@@ -54,5 +63,15 @@ input {
 }
 
 button {
+  transition-duration: 0.3s;
   font-size: 18px;
+  color: rgb(0, 0, 0);
+  border: 2px solid #4CAF50;
+  padding: 5px 5px 5px 5px;
+  border-radius: 10%;
+}
+button:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  box-shadow: 0 10px 10px 0 rgba(0,0,0,0.24),0 10px 20px 0 rgba(0,0,0,0.19);
 }
