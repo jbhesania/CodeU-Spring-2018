@@ -31,11 +31,10 @@
         <h2>Statistics</h2>
         <p>Here are some site statistics</p>
         <ul>
-            <li>Users:</li>
-            <li>Conversations:</li>
-            <li>Messages:</li>
-            <li>Most active user:</li>
-            <li>Newest user:</li>
+            <li>Users: ${userSize}</li>
+            <li>Conversations: ${conversationSize}</li>
+            <li>Messages: ${messagesSize}</li>
+            <li>Newest user: ${newestUser}</li>
         </ul>
 
     </div>

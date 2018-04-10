@@ -82,6 +82,11 @@ public class MessageStore {
     return loaded;
   }
 
+  /** Access the current set of messages known to the application. */
+  public int getSize() {
+    return messages.size();
+  }
+
   /** Add a new message to the current set of messages known to the application. */
   public void addMessage(Message message) {
     messages.add(message);

@@ -84,6 +84,13 @@ public class UserStore {
     return null;
   }
 
+
+  /** Access the current set of users known to the application. */
+  public int getSize() {
+    return users.size();
+  }
+
+
   /**
    * Access the User object with the given UUID.
    *
@@ -96,6 +103,12 @@ public class UserStore {
       }
     }
     return null;
+  }
+
+  public String getNewestUser(){
+    User newest = users.get(users.size()-1);
+    String newestName = newest.getName();
+    return newestName;
   }
 
   /** Add a new user to the current set of users known to the application. */
