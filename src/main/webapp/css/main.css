@@ -14,7 +14,7 @@
  */
 
 body {
-  margin: 0;
+  margin: 10% 0% 0% 0%;
   font-family: sans-serif;
   line-height: 1.6;
   font-size: 18px;
@@ -24,6 +24,10 @@ body {
 }
 
 nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
   background-color: rgb(56, 168, 88);
 }
 
