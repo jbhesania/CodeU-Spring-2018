@@ -99,20 +99,22 @@ public class UploadServlet extends HttpServlet {
 
         while ((line = br.readLine()) != null) {
             // splits line read into millisecond offset from conversation start, speaker, and message
-            // example: "00:00 00:01 (tab) NAME (tab) Message."
+            // example 1: "00.00 00.01 (tab) NAME (tab) Message."
+            // example 2: "00.00 00.01 (tab)      (tab) Message."
             String arr[] = line.split("\\t", 3);
-            // if line doesn't follow format, continue
+
+            // if line doesn't follow format, continue (for any non-message lines in file)
             if (arr.length < 3 || !arr[0].contains(" ") || (arr[1].trim().length() > 0 && !arr[1].contains(":"))) {
                 continue;
             }
 
-            // if arr[1] not parse-able, continue
+            // if arr[1] not parse-able, continue (for any non-message lines in file)
             try {
                 long plusMillis = (long) Double.parseDouble(arr[0].substring(0, arr[0].indexOf(" "))) * 1000;
                 String name = (arr[1].trim().length() == 0) ? arr[1] : arr[1].substring(0, arr[1].indexOf(":"));
                 String cleanedMessageContent = Jsoup.clean(arr[2], Whitelist.none());
 
-                // updates currUser if name is not only whitespace, creates new user if not in users
+                // updates currUser if name is not empty string, creates new user if not in users
                 if (arr[1].trim().length() > 0) {
                     if (!users.containsKey(name)) {
                         currUser = new User(
