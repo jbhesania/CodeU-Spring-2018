@@ -36,14 +36,11 @@ public class UploadServlet extends HttpServlet {
     private MessageStore messageStore;
     private UserStore userStore;
 
-    private HashMap<String, User> users;
-
     public void init() throws ServletException {
         super.init();
         setConversationStore(ConversationStore.getInstance());
         setMessageStore(MessageStore.getInstance());
         setUserStore(UserStore.getInstance());
-        users = new HashMap<>();
     }
 
     void setConversationStore(ConversationStore conversationStore) {
@@ -72,10 +69,19 @@ public class UploadServlet extends HttpServlet {
                           HttpServletResponse response) throws ServletException, IOException {
 
         Part filePart = request.getPart("file");
-        String fileName = getFileName(filePart);
 
-        if (filePart == null || fileName == null) {
+        // null check
+        if (filePart == null) {
             request.setAttribute("error", "No file uploaded.");
+            request.getRequestDispatcher("/WEB-INF/view/adminpage.jsp").forward(request, response);
+            return;
+        }
+
+        // file type check (only text files allowed)
+        String fileName = getFileName(filePart);
+        String contentType = filePart.getContentType();
+        if (!contentType.contains("text")) {
+            request.setAttribute("error", "Wrong file type.");
             request.getRequestDispatcher("/WEB-INF/view/adminpage.jsp").forward(request, response);
             return;
         }
@@ -89,11 +95,12 @@ public class UploadServlet extends HttpServlet {
         Conversation convo = null;
         Instant convoTime = Instant.now();
         User currUser = null;
+        HashMap<String, User> users = new HashMap<>();
 
         while ((line = br.readLine()) != null) {
             // splits line read into millisecond offset from conversation start, speaker, and message
+            // example: "00:00 00:01 (tab) NAME (tab) Message."
             String arr[] = line.split("\\t", 3);
-
             // if line doesn't follow format, continue
             if (arr.length < 3 || !arr[0].contains(" ") || (arr[1].trim().length() > 0 && !arr[1].contains(":"))) {
                 continue;
@@ -119,6 +126,7 @@ public class UploadServlet extends HttpServlet {
                         currUser = users.get(name);
                     }
                 }
+
 
                 // stores conversation if reading first line
                 if (convo == null && currUser != null) {
@@ -150,7 +158,7 @@ public class UploadServlet extends HttpServlet {
 
         // if goes through file without storing convo, then it was formatted incorrectly
         if (convo == null) {
-            request.setAttribute("error", "Incorrect file format.");
+            request.setAttribute("error", "Incorrect data format.");
             request.getRequestDispatcher("/WEB-INF/view/adminpage.jsp").forward(request, response);
             return;
         } else {
@@ -160,10 +168,6 @@ public class UploadServlet extends HttpServlet {
     }
 
     private String getFileName(final Part part) {
-        if (part == null) {
-            return null;
-        }
-
         for (String content : part.getHeader("content-disposition").split(";")) {
             if (content.trim().startsWith("filename")) {
                 return content.substring(
