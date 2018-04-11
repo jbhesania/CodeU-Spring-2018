@@ -1,6 +1,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
+import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class ConversationStoreTest {
 
   private ConversationStore conversationStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
+  private ConversationStore mockConversationStore;
 
   private final Conversation CONVERSATION_ONE =
       new Conversation(
@@ -24,6 +26,7 @@ public class ConversationStoreTest {
   public void setup() {
     mockPersistentStorageAgent = Mockito.mock(PersistentStorageAgent.class);
     conversationStore = ConversationStore.getTestInstance(mockPersistentStorageAgent);
+    mockConversationStore = Mockito.mock(ConversationStore.class);
 
     final List<Conversation> conversationList = new ArrayList<>();
     conversationList.add(CONVERSATION_ONE);
@@ -50,6 +53,12 @@ public class ConversationStoreTest {
     boolean isTitleTaken = conversationStore.isTitleTaken(CONVERSATION_ONE.getTitle());
 
     Assert.assertTrue(isTitleTaken);
+  }
+
+  @Test
+  public void testGetSize() {
+    int conversationSize = mockConversationStore.getSize();
+    Mockito.verify(mockConversationStore).getSize();
   }
 
   @Test

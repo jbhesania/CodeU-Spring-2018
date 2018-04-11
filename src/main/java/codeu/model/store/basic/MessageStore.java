@@ -84,7 +84,13 @@ public class MessageStore {
 
   /** Access the current set of messages known to the application. */
   public int getSize() {
-    return messages.size();
+    if (messages == null) {
+      // Found null List
+      return 0;
+    }
+    else{
+        return messages.size();
+    }  
   }
 
   /** Add a new message to the current set of messages known to the application. */

@@ -67,40 +67,12 @@ public class AdminPageServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
-            String newestUser;
-            //Reload site statistic variables every time the page is loaded
-            int conversationSize;
-            if (conversationStore == null) {
-              // couldn't find conversation, redirect to conversation list
-              conversationSize = 0;
-            }
-            else{
-                conversationSize = conversationStore.getSize();
-            }
-            int messagesSize;
-            if (messageStore == null) {
-              // couldn't find conversation, redirect to conversation list
-              messagesSize = 0;
-            }
-            else{
-                messagesSize = messageStore.getSize();
-            }
-            int userSize;
-            if (userStore == null) {
-              // couldn't find conversation, redirect to conversation list
-              userSize = 0;
-              newestUser = "";
-            }
-            else{
-                userSize = userStore.getSize();
-                newestUser = userStore.getNewestUser();
-            }
 
             //Set the attribute for each variable so that it can display on the jsp file
-            request.setAttribute("conversationSize", conversationSize);
-            request.setAttribute("messagesSize", messagesSize);
-            request.setAttribute("userSize", userSize);
-            request.setAttribute("newestUser", newestUser);
+            request.setAttribute("conversationSize", conversationStore.getSize());
+            request.setAttribute("messagesSize", messageStore.getSize());
+            request.setAttribute("userSize", userStore.getSize());
+            request.setAttribute("newestUser", userStore.getNewestUser());
 
             request.getRequestDispatcher("/WEB-INF/view/adminpage.jsp").forward(request, response);
     }

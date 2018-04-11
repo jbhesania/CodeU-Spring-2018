@@ -15,6 +15,7 @@ public class UserStoreTest {
 
   private UserStore userStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
+  private UserStore mockUserStore;
 
   private final User USER_ONE =
       new User(UUID.randomUUID(), "test_username_one", "password one", Instant.ofEpochMilli(1000));
@@ -27,6 +28,7 @@ public class UserStoreTest {
   public void setup() {
     mockPersistentStorageAgent = Mockito.mock(PersistentStorageAgent.class);
     userStore = UserStore.getTestInstance(mockPersistentStorageAgent);
+    mockUserStore = Mockito.mock(UserStore.class);
 
     final List<User> userList = new ArrayList<>();
     userList.add(USER_ONE);
@@ -72,6 +74,18 @@ public class UserStoreTest {
 
     assertEquals(inputUser, resultUser);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputUser);
+  }
+
+  @Test
+  public void testGetSize() {
+    int userSize = mockUserStore.getSize();
+    Mockito.verify(mockUserStore).getSize();
+  }
+
+  @Test
+  public void testGetNewestUser() {
+    String newestUser = mockUserStore.getNewestUser();
+    Mockito.verify(mockUserStore).getNewestUser();
   }
 
   @Test

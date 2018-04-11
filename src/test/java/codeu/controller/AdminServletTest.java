@@ -55,9 +55,12 @@ public class AdminServletTest {
     @Test
     public void testDoGet() throws IOException, ServletException {
 
-        // int conversationSize;
-        adminPageServlet.doGet(mockRequest, mockResponse);
+        Mockito.verify(mockRequest).setAttribute("conversationSize", mockConversationStore.getSize());
+        Mockito.verify(mockRequest).setAttribute("messagesSize", mockMessageStore.getSize());
+        Mockito.verify(mockRequest).setAttribute("userSize", mockUserStore.getSize());
+        Mockito.verify(mockRequest).setAttribute("newestUser", mockUserStore.getNewestUser());
 
+        adminPageServlet.doGet(mockRequest, mockResponse);
         Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
 
     }

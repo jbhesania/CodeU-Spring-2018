@@ -87,7 +87,13 @@ public class UserStore {
 
   /** Access the current set of users known to the application. */
   public int getSize() {
-    return users.size();
+    if (users == null) {
+      // Found null List
+      return 0;
+    }
+    else{
+        return users.size();
+    }  
   }
 
 
@@ -106,9 +112,21 @@ public class UserStore {
   }
 
   public String getNewestUser(){
-    User newest = users.get(users.size()-1);
-    String newestName = newest.getName();
-    return newestName;
+    User newestUser = users.get(0);
+    for(User user : users){
+      if(newestUser.getCreationTime().isBefore(user.getCreationTime())){
+        newestUser = user;
+      }
+    }
+    return newestUser.getName();
+    // if(users == null){
+    //   return "";
+    // }
+    // else{
+    //   User newest = users.get(users.size()-1);
+    //   String newestName = newest.getName();
+    //   return newestName;
+    // }
   }
 
   /** Add a new user to the current set of users known to the application. */
