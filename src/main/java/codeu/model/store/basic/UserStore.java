@@ -111,6 +111,7 @@ public class UserStore {
     return null;
   }
 
+  //Compare all Intants to find the newest user in the list
   public String getNewestUser(){
     User newestUser = users.get(0);
     for(User user : users){
@@ -118,15 +119,8 @@ public class UserStore {
         newestUser = user;
       }
     }
+    //return name of newest user
     return newestUser.getName();
-    // if(users == null){
-    //   return "";
-    // }
-    // else{
-    //   User newest = users.get(users.size()-1);
-    //   String newestName = newest.getName();
-    //   return newestName;
-    // }
   }
 
   /** Add a new user to the current set of users known to the application. */

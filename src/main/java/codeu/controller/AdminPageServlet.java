@@ -69,11 +69,11 @@ public class AdminPageServlet extends HttpServlet {
         throws IOException, ServletException {
 
             //Set the attribute for each variable so that it can display on the jsp file
-            request.setAttribute("conversationSize", conversationStore.getSize());
-            request.setAttribute("messagesSize", messageStore.getSize());
-            request.setAttribute("userSize", userStore.getSize());
-            request.setAttribute("newestUser", userStore.getNewestUser());
+        request.setAttribute("conversationSize", conversationStore.getSize());
+        request.setAttribute("messagesSize", messageStore.getSize());
+        request.setAttribute("userSize", userStore.getSize());
+        request.setAttribute("newestUser", userStore.getNewestUser());
 
-            request.getRequestDispatcher("/WEB-INF/view/adminpage.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/view/adminpage.jsp").forward(request, response);
     }
 }
