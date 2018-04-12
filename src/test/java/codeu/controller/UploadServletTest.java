@@ -59,10 +59,6 @@ public class UploadServletTest {
         uploadServlet.doPost(mockRequest, mockResponse);
         Mockito.verify(mockRequest).setAttribute("error", "No file uploaded.");
         Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
-
-
-//        Mockito.when(request.getContentType()).thenReturn("multipart/form-data; boundary=someBoundary");
-
     }
 
     @Test
