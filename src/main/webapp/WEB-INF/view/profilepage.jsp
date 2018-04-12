@@ -16,13 +16,14 @@
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%
-User user = (User) request.getAttribute("user");
+User pageUser = (User) request.getAttribute("pageUser");
+User sessionUser = (User) request.getAttribute("sessionUser");
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= user.getName() %></title>
+  <title><%= pageUser.getName() %></title>
   <link rel="stylesheet" href="/css/main.css" type="text/css">
 
   <style>
@@ -38,8 +39,8 @@ User user = (User) request.getAttribute("user");
   <nav>
     <a id="navTitle" href="/">CodeU Chat App</a>
     <a href="/conversations">Conversations</a>
-    <% if(request.getSession().getAttribute("user") != null){ %>
-      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
+    <% if(sessionUser != null){ %>
+      <a>Hello <%= sessionUser.getName() %>!</a>
     <% } else{ %>
       <a href="/login">Login</a>
       <a href="/register">Register</a>
@@ -49,11 +50,26 @@ User user = (User) request.getAttribute("user");
   </nav>
 
   <div id="container">
-
-    <h1><%= user.getName() %>'s Profile Page
+    <h1><%= pageUser.getName() %>'s Profile Page
       <a href="" style="float: right">&#8635;</a></h1>
+    
+  <% if(sessionUser != null){
+       if(sessionUser.follows(pageUser.getId())){ %>
+         <form action="" method=POST>
+           <button type="submit" name="follow" value="false">Unfollow</button>
+         </form>
+       <% } else { %>
+          <form action="" method=POST>
+            <button type="submit" name="follow" value="true">Follow</button>
+          </form>
+       <% }
+     }
+     else { %>
+       <p><a href="/login">Login</a> to send a message.</p>
+       <p> <% request.getSession().getAttribute("user"); %></p>
+  <% } %>
 
   </div>
 
-  </body>
+</body>
 </html>

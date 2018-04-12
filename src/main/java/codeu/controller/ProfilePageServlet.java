@@ -39,11 +39,51 @@ public class ProfilePageServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     String requestUrl = request.getRequestURI();
-    String userName = requestUrl.substring("/users/".length());
+    String pageUserName = requestUrl.substring("/users/".length());
+    // The user who's profile page we are on
+    User pageUser = userStore.getUser(pageUserName);
+    User sessionUser = null;
 
-    User user = userStore.getUser(userName);
-
-    request.setAttribute("user", user);
+    if(request.getSession().getAttribute("user") != null) {
+      String sessionUserName = (String) request.getSession().getAttribute("user");
+      // The user that is performing the follow
+      sessionUser = userStore.getUser(sessionUserName);
+    }
+    
+    request.setAttribute("sessionUser", sessionUser);
+    request.setAttribute("pageUser", pageUser);
     request.getRequestDispatcher("/WEB-INF/view/profilepage.jsp").forward(request, response);
  }
+
+ /**
+  * Implements the follow functionality
+  */
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
+    
+    String requestUrl = request.getRequestURI();
+    String pageUserName = requestUrl.substring("/users/".length());
+    // The user who's profile page we are on
+    User pageUser = userStore.getUser(pageUserName);
+
+    // The user that is performing the follow
+    String sessionUserName = (String) request.getSession().getAttribute("user");
+    User sessionUser = userStore.getUser(sessionUserName);
+
+    /* TODO : be able to access this data from jsp file instead of recollecting
+    User sessionUser = (User) request.getAttribute("sessionUser");
+    User pageUser = (User) request.getAttribute("pageUser");
+    */ 
+
+    //Now add user to followerUser's hashtable
+    if(request.getParameter("follow").equals("true")) {
+      sessionUser.follow(pageUser);
+    }
+    else {
+      sessionUser.unfollow(pageUser);
+    }
+
+    response.sendRedirect(requestUrl);
+  }
 }

@@ -16,6 +16,7 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.HashMap;
 
 /** Class representing a registered user. */
 public class User {
@@ -23,6 +24,7 @@ public class User {
   private final String name;
   private final String password;
   private final Instant creation;
+  private final HashMap<UUID, String> followingMap;
 
   /**
    * Constructs a new User.
@@ -37,6 +39,7 @@ public class User {
     this.name = name;
     this.password = password;
     this.creation = creation;
+    this.followingMap = new HashMap<UUID, String>();
   }
 
   /** Returns the ID of this User. */
@@ -57,5 +60,31 @@ public class User {
   /** Returns the passsword of this User. */
   public String getPassword() {
     return password;
+  }
+ 
+  /** Returns the followingMap of this User. */
+  public HashMap<UUID, String> getFollowingMap() {
+    return followingMap;
+  }
+  
+  /** Checks if userId exists in Hashmap using UUID. */
+  public boolean follows(UUID id) {
+    return followingMap.containsKey(id);  
+  }
+
+  /** Checks if userId exists in Hashmap using userName, valid because username
+   *  is required to be unique. */
+  public boolean follows(String name) {
+    return followingMap.containsValue(name);  
+  }
+
+  /** Adds follower to HashMap. */
+  public void follow(User toFollow) {
+    followingMap.put(toFollow.getId(), toFollow.getName()); 
+  }
+
+  /** Unfollows user */
+  public void unfollow(User toUnfollow) {
+    followingMap.remove(toUnfollow.getId(), toUnfollow.getName());
   }
 }
