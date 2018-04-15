@@ -62,6 +62,13 @@ public class ConversationStoreTest {
   }
 
   @Test
+  public void testNullSize() {
+    Mockito.when(mockConversationStore.getSize()).thenReturn(0);
+    int conversationSize = mockConversationStore.getSize();
+    Assert.assertEquals(conversationSize, 0);
+  }
+
+  @Test
   public void testIsTitleTaken_false() {
     boolean isTitleTaken = conversationStore.isTitleTaken("unfound_title");
 

@@ -83,6 +83,13 @@ public class UserStoreTest {
   }
 
   @Test
+  public void testNullSize() {
+    Mockito.when(mockUserStore.getSize()).thenReturn(0);
+    int userSize = mockUserStore.getSize();
+    Assert.assertEquals(userSize, 0);
+  }
+
+  @Test
   public void testGetNewestUser() {
     String newestUser = mockUserStore.getNewestUser();
     Mockito.verify(mockUserStore).getNewestUser();

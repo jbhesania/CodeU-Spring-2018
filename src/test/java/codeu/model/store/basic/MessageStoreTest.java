@@ -71,6 +71,13 @@ public class MessageStoreTest {
   }
 
   @Test
+  public void testNullSize() {
+    Mockito.when(mockMessageStore.getSize()).thenReturn(0);
+    int messageSize = mockMessageStore.getSize();
+    Assert.assertEquals(messageSize, 0);
+  }
+
+  @Test
   public void testAddMessage() {
     UUID inputConversationId = UUID.randomUUID();
     Message inputMessage =
