@@ -113,14 +113,20 @@ public class UserStore {
 
   //Compare all Intants to find the newest user in the list
   public String getNewestUser(){
-    User newestUser = users.get(0);
-    for(User user : users){
-      if(newestUser.getCreationTime().isBefore(user.getCreationTime())){
-        newestUser = user;
-      }
+    if (users == null || users.size() == 0) {
+      // Found null List
+      return "";
     }
-    //return name of newest user
-    return newestUser.getName();
+    else{  
+      User newestUser = users.get(0);
+      for(User user : users){
+        if(newestUser.getCreationTime().isBefore(user.getCreationTime())){
+          newestUser = user;
+        }
+      }
+      //return name of newest user
+      return newestUser.getName();
+    }
   }
 
   /** Add a new user to the current set of users known to the application. */
