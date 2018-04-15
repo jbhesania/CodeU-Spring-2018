@@ -68,7 +68,7 @@ public class AdminPageServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException {
 
-            //Set the attribute for each variable so that it can display on the jsp file
+        //Set the attribute for each variable so that it can display on the jsp file
         request.setAttribute("conversationSize", conversationStore.getSize());
         request.setAttribute("messagesSize", messageStore.getSize());
         request.setAttribute("userSize", userStore.getSize());
