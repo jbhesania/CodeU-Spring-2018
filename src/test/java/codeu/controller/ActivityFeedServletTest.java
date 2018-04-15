@@ -63,11 +63,6 @@ public class ActivityFeedServletTest {
      */
     @Test
     public void testDoGet_BaseCase3DifferentInputs3SameTime() throws IOException, ServletException {
-        //using spy to check if activity list is accurate
-        mockRequest = Mockito.spy(HttpServletRequest.class);
-        Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp"))
-                .thenReturn(mockRequestDispatcher);
-
         PersistentStorageAgent mockStorage = Mockito.mock(PersistentStorageAgent.class);
         activityFeedServlet.setPersistentStorageAgent(mockStorage);
 
@@ -174,11 +169,6 @@ public class ActivityFeedServletTest {
      */
     @Test
     public void testDoGet_BaseCase3DifferentInputs2SameTime() throws IOException, ServletException {
-        //using spy to check if activity list is accurate
-        mockRequest = Mockito.spy(HttpServletRequest.class);
-        Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp"))
-                .thenReturn(mockRequestDispatcher);
-
         PersistentStorageAgent mockStorage = Mockito.mock(PersistentStorageAgent.class);
         activityFeedServlet.setPersistentStorageAgent(mockStorage);
 
@@ -282,11 +272,6 @@ public class ActivityFeedServletTest {
      */
     @Test
     public void testDoGet_BaseCase3DifferentInputs0SameTime() throws IOException, ServletException {
-        //using spy to check if activity list is accurate
-        mockRequest = Mockito.spy(HttpServletRequest.class);
-        Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp"))
-                .thenReturn(mockRequestDispatcher);
-
         PersistentStorageAgent mockStorage = Mockito.mock(PersistentStorageAgent.class);
         activityFeedServlet.setPersistentStorageAgent(mockStorage);
 
@@ -387,11 +372,6 @@ public class ActivityFeedServletTest {
      */
     @Test
     public void testDoGet_BaseCase3Inputs2Same1Different() throws IOException, ServletException {
-        //using spy to check if activity list is accurate
-        mockRequest = Mockito.spy(HttpServletRequest.class);
-        Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp"))
-                .thenReturn(mockRequestDispatcher);
-
         PersistentStorageAgent mockStorage = Mockito.mock(PersistentStorageAgent.class);
         activityFeedServlet.setPersistentStorageAgent(mockStorage);
 
@@ -493,11 +473,6 @@ public class ActivityFeedServletTest {
      */
     @Test
     public void testDoGet_BaseCase3SameInputs() throws IOException, ServletException {
-        //using spy to check if activity list is accurate
-        mockRequest = Mockito.spy(HttpServletRequest.class);
-        Mockito.when(mockRequest.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp"))
-                .thenReturn(mockRequestDispatcher);
-
         PersistentStorageAgent mockStorage = Mockito.mock(PersistentStorageAgent.class);
         activityFeedServlet.setPersistentStorageAgent(mockStorage);
 
