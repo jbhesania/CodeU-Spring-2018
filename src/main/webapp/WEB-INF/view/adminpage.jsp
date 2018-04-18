@@ -12,18 +12,7 @@
   </head>
   <body>
 
-    <nav>
-      <a id="navTitle" href="/">CodeU Chat App</a>
-      <a href="/conversations">Conversations</a>
-      <% if(request.getSession().getAttribute("user") != null){ %>
-        <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-      <% } else{ %>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-      <% } %>
-      <a href="/about.jsp">About</a>
-      <a href="/adminpage.jsp">Admin Page</a>
-    </nav>
+    <jsp:include page="/WEB-INF/nav.jsp" />
 
     <div id="container">
         <h1>Administration</h1>
@@ -31,11 +20,10 @@
         <h2>Statistics</h2>
         <p>Here are some site statistics</p>
         <ul>
-            <li>Users:</li>
-            <li>Conversations:</li>
-            <li>Messages:</li>
-            <li>Most active user:</li>
-            <li>Newest user:</li>
+            <li>Users: ${userSize}</li>
+            <li>Conversations: ${conversationSize}</li>
+            <li>Messages: ${messagesSize}</li>
+            <li>Newest user: ${newestUser}</li>
         </ul>
 
     </div>
