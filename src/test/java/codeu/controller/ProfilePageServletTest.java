@@ -49,11 +49,12 @@ public class ProfilePageServletTest {
 
   @Test
   public void testDoGet() throws IOException, ServletException {
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
     UserStore mockUserStore = Mockito.mock(UserStore.class);
     profilePageServlet.setUserStore(mockUserStore);
+
     User mockPageUser = Mockito.mock(User.class);
     User mockSessionUser = Mockito.mock(User.class);
-    HttpSession mockSession = Mockito.mock(HttpSession.class);
 
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/testuser");
     Mockito.when(mockUserStore.getUser("testuser")).thenReturn(mockPageUser);
@@ -92,8 +93,49 @@ public class ProfilePageServletTest {
   }
 
   @Test
-  public void testDoPost() throws IOException, ServletException {
+  public void testDoPost_Follow() throws IOException, ServletException {
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    profilePageServlet.setUserStore(mockUserStore);
 
+    User mockPageUser = Mockito.mock(User.class);
+    User mockSessionUser = Mockito.mock(User.class);
 
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/testuser");
+    Mockito.when(mockUserStore.getUser("testuser")).thenReturn(mockPageUser);
+
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("sessionUserName");
+    Mockito.when(mockUserStore.getUser("sessionUserName")).thenReturn(mockSessionUser);
+    Mockito.when(mockRequest.getParameter("follow")).thenReturn("true");
+    
+    profilePageServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockSessionUser).follow(mockPageUser);
+    Mockito.verify(mockResponse).sendRedirect("/users/testuser");
   }
+
+  @Test
+  public void testDoPost_Unfollow() throws IOException, ServletException {
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    profilePageServlet.setUserStore(mockUserStore);
+
+    User mockPageUser = Mockito.mock(User.class);
+    User mockSessionUser = Mockito.mock(User.class);
+
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/testuser");
+    Mockito.when(mockUserStore.getUser("testuser")).thenReturn(mockPageUser);
+
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("sessionUserName");
+    Mockito.when(mockUserStore.getUser("sessionUserName")).thenReturn(mockSessionUser);
+    Mockito.when(mockRequest.getParameter("follow")).thenReturn("false");
+    
+    profilePageServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockSessionUser).unfollow(mockPageUser);
+    Mockito.verify(mockResponse).sendRedirect("/users/testuser");
+  }
+
 }

@@ -40,10 +40,11 @@ public class ProfilePageServlet extends HttpServlet {
       throws IOException, ServletException {
     String requestUrl = request.getRequestURI();
     String pageUserName = requestUrl.substring("/users/".length());
-    // The user who's profile page we are on
+    //PageUser is user who's profile page we look at and sessionUser is who we are
     User pageUser = userStore.getUser(pageUserName);
     User sessionUser = null;
 
+    // If the session user is null, eg. No user is logged in
     if(request.getSession().getAttribute("user") != null) {
       String sessionUserName = (String) request.getSession().getAttribute("user");
       // The user that is performing the follow
@@ -62,21 +63,15 @@ public class ProfilePageServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
     
+    //PageUser is user who's profile page we look at and sessionUser is who we are
     String requestUrl = request.getRequestURI();
     String pageUserName = requestUrl.substring("/users/".length());
-    // The user who's profile page we are on
     User pageUser = userStore.getUser(pageUserName);
 
-    // The user that is performing the follow
     String sessionUserName = (String) request.getSession().getAttribute("user");
     User sessionUser = userStore.getUser(sessionUserName);
 
-    /* TODO : be able to access this data from jsp file instead of recollecting
-    User sessionUser = (User) request.getAttribute("sessionUser");
-    User pageUser = (User) request.getAttribute("pageUser");
-    */ 
-
-    //Now add user to followerUser's hashtable
+    //True means we need to follow them
     if(request.getParameter("follow").equals("true")) {
       sessionUser.follow(pageUser);
     }
