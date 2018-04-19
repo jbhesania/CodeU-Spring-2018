@@ -78,14 +78,14 @@ input {
 button {
   transition-duration: 0.3s;
   font-size: 18px;
-  color: rgb(0, 0, 0);
-  border: 2px solid #4CAF50;
+  color: #67280B;
+  border: 2px solid #708E29;
   padding: 5px 5px 5px 5px;
   border-radius: 10%;
 }
 button:hover {
-  background-color: #4CAF50; /* Green */
-  color: white;
+  background-color: #708E29; /* Green */
+  color: #67280B;
   box-shadow: 0 10px 10px 0 rgba(0,0,0,0.24),0 10px 20px 0 rgba(0,0,0,0.19);
 }
 p{
