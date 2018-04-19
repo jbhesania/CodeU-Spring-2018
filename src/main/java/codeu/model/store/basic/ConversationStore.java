@@ -86,6 +86,17 @@ public class ConversationStore {
     return conversations;
   }
 
+  /** Access the current set of conversations known to the application. */
+  public int getSize() {
+    if (conversations == null) {
+      // Found null List
+      return 0;
+    }
+    else{
+        return conversations.size();
+    }  
+  }
+
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
