@@ -3,12 +3,6 @@
     <a href="/conversations">Conversations</a>9
     <% if(request.getSession().getAttribute("user") != null){ %>
         <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-        <script>
-            function logOut(){
-                request.getSession().setAttribute("user", null);
-            }
-        </script>
-        <button onclick="logOut()">Log Out</button>
     <% } else{ %>
         <a href="/login">Login</a>
         <a href="/register">Register</a>
