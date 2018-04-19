@@ -36,18 +36,7 @@ User sessionUser = (User) request.getAttribute("sessionUser");
 </head>
 
 <body>
-  <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
-    <a href="/conversations">Conversations</a>
-    <% if(sessionUser != null){ %>
-      <a>Hello <%= sessionUser.getName() %>!</a>
-    <% } else{ %>
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-    <% } %>
-    <a href="/about.jsp">About</a>
-    <a href="/adminpage">Admin Page</a>
-  </nav>
+  <jsp:include page="/WEB-INF/nav.jsp" />
 
   <div id="container">
     <h1><%= pageUser.getName() %>'s Profile Page
