@@ -8,6 +8,7 @@
         <a href="/register">Register</a>
     <% } %>
     <a href="/about.jsp">About</a>
+    <a href="/activityfeed">Activity Feed</a>
     <a href="/adminpage">Admin Page</a>
     <a href="/testdata">Load Test Data</a>
 </nav>

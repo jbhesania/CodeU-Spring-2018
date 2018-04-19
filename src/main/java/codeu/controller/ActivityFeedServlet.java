@@ -124,8 +124,8 @@ public class ActivityFeedServlet extends HttpServlet {
                         time = conversation.getCreationTime().toString() + ": ";
                         event = findUser(permUserList, conversation.getOwnerId()).getName() + " created a new conversation: "
                                 + conversation.getTitle();
-                        //reset not chosen
 
+                        //reset not chosen
                         if (messageListIterator.hasNext()) {
                             messageListIterator.next();
                         }
@@ -140,8 +140,8 @@ public class ActivityFeedServlet extends HttpServlet {
                         event = findUser(permUserList, message.getAuthorId()).getName() + " sent a message to "
                                 + findConversation(permConversationList, message.getConversationId()) + ": "
                                 + message.getContent();
-                        //reset not chosen
 
+                        //reset not chosen
                         if (conversationListIterator.hasNext()) {
                             conversationListIterator.next();
                         }
@@ -155,8 +155,8 @@ public class ActivityFeedServlet extends HttpServlet {
                     if (input == 3) {
                         time = user.getCreationTime().toString() + ": ";
                         event = user.getName() + " joined!";
-                        //reset not chosen
 
+                        //reset not chosen
                         if (conversationListIterator.hasNext()) {
                             conversationListIterator.next();
                         }
@@ -168,7 +168,6 @@ public class ActivityFeedServlet extends HttpServlet {
                     }
 
                     activityList.add(time + event);
-
                 }
                 request.setAttribute("activity", activityList);
                 request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
