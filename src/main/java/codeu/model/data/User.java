@@ -27,7 +27,7 @@ public class User {
   private final HashMap<UUID, String> followingMap;
 
   /**
-   * Constructs a new User.
+   * Constructs a new User. Makes user follow themselves by default. 
    *
    * @param id the ID of this User
    * @param name the username of this User
