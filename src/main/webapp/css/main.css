@@ -46,7 +46,7 @@ nav a {
 }
 
 nav a:hover{
-  color: #708E29;
+  color: #EAE594;
 }
 
 #navTitle {
@@ -60,6 +60,14 @@ nav a:hover{
 }
 
 h1 {
+  color: #67280B;
+}
+
+h2 {
+  color: #67280B;
+}
+
+li {
   color: #67280B;
 }
 
