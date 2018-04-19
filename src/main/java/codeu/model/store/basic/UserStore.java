@@ -84,6 +84,19 @@ public class UserStore {
     return null;
   }
 
+
+  /** Access the current set of users known to the application. */
+  public int getSize() {
+    if (users == null) {
+      // Found null List
+      return 0;
+    }
+    else{
+        return users.size();
+    }  
+  }
+
+
   /**
    * Access the User object with the given UUID.
    *
@@ -96,6 +109,24 @@ public class UserStore {
       }
     }
     return null;
+  }
+
+  //Compare all Intants to find the newest user in the list
+  public String getNewestUser(){
+    if (users == null || users.size() == 0) {
+      // Found null List
+      return "";
+    }
+    else{  
+      User newestUser = users.get(0);
+      for(User user : users){
+        if(newestUser.getCreationTime().isBefore(user.getCreationTime())){
+          newestUser = user;
+        }
+      }
+      //return name of newest user
+      return newestUser.getName();
+    }
   }
 
   /** Add a new user to the current set of users known to the application. */
