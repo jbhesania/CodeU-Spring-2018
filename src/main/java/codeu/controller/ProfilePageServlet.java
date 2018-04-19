@@ -78,7 +78,8 @@ public class ProfilePageServlet extends HttpServlet {
     else {
       sessionUser.unfollow(pageUser);
     }
-
+    
+    userStore.addUser(sessionUser);
     response.sendRedirect(requestUrl);
   }
 }

@@ -23,9 +23,11 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -68,6 +70,17 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         User user = new User(uuid, userName, password, creationTime);
         users.add(user);
+             System.out.println("AAAAAAAAAAAAAAAAAAINSIDE OF LOADUSERS AAAAAAAA" + userName);
+
+        EmbeddedEntity followingMap = (EmbeddedEntity) entity.getProperty("followingMap");
+        if (followingMap != null) {
+          System.out.println("Confirm that following map is not null");
+          for (String key : followingMap.getProperties().keySet()) {
+             System.out.println("GOING THROUGH THE KEYSET WHEN LOADING USERS" + key);
+             user.follow(key, UUID.fromString((String) followingMap.getProperty(key)));
+          }
+        }   
+
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
         // occur include network errors, Datastore service errors, authorization errors,
@@ -153,6 +166,18 @@ public class PersistentDataStore {
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+
+    System.out.println("In method writeThrough");
+
+    EmbeddedEntity embeddedHashTable = new EmbeddedEntity();
+    HashMap<String, UUID> followMap = user.getFollowingMap();
+    for (String key : followMap.keySet()) { 
+        System.out.println("AAAAAAA" + user.getName() + "follows" + key);
+        embeddedHashTable.setProperty(key, followMap.get(key).toString());
+    }
+    userEntity.setProperty("followingMap", embeddedHashTable);
+    
+
     datastore.put(userEntity);
   }
 

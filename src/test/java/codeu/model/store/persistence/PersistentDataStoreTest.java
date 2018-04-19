@@ -39,6 +39,7 @@ public class PersistentDataStoreTest {
   @Test
   public void testSaveAndLoadUsers() throws PersistentDataStoreException {
     UUID idOne = UUID.randomUUID();
+    System.out.println("AAAAAAAAAAAAAAAAA" + idOne.toString());
     String nameOne = "test_username_one";
     Instant creationOne = Instant.ofEpochMilli(1000);
     String passwordOne = "test_password_one";
@@ -59,6 +60,7 @@ public class PersistentDataStoreTest {
 
     // confirm that what we saved matches what we loaded
     User resultUserOne = resultUsers.get(0);
+    System.out.println("BBBBBBBBBBBBBBBBBBBBB" + resultUserOne.toString());
     Assert.assertEquals(idOne, resultUserOne.getId());
     Assert.assertEquals(nameOne, resultUserOne.getName());
     Assert.assertEquals(passwordOne, resultUserOne.getPassword());

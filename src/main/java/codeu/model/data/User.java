@@ -24,7 +24,7 @@ public class User {
   private final String name;
   private final String password;
   private final Instant creation;
-  private final HashMap<UUID, String> followingMap;
+  private final HashMap<String, UUID> followingMap;
 
   /**
    * Constructs a new User. Makes user follow themselves by default. 
@@ -39,8 +39,8 @@ public class User {
     this.name = name;
     this.password = password;
     this.creation = creation;
-    this.followingMap = new HashMap<UUID, String>();
-    followingMap.put(id, name);
+    this.followingMap = new HashMap<String, UUID>();
+    followingMap.put(name, id);
   }
 
   /** Returns the ID of this User. */
@@ -64,28 +64,33 @@ public class User {
   }
  
   /** Returns the followingMap of this User. */
-  public HashMap<UUID, String> getFollowingMap() {
+  public HashMap<String, UUID> getFollowingMap() {
     return followingMap;
   }
   
   /** Checks if userId exists in Hashmap using UUID. */
   public boolean follows(UUID id) {
-    return followingMap.containsKey(id);  
+    return followingMap.containsValue(id);  
   }
 
   /** Checks if userId exists in Hashmap using userName, valid because username
    *  is required to be unique. */
   public boolean follows(String name) {
-    return followingMap.containsValue(name);  
+    return followingMap.containsKey(name);  
   }
 
   /** Adds follower to HashMap. */
   public void follow(User toFollow) {
-    followingMap.put(toFollow.getId(), toFollow.getName()); 
+    followingMap.put(toFollow.getName(), toFollow.getId()); 
   }
 
   /** Unfollows user */
   public void unfollow(User toUnfollow) {
-    followingMap.remove(toUnfollow.getId(), toUnfollow.getName());
+    followingMap.remove(toUnfollow.getName(), toUnfollow.getId());
+  }
+
+  /** Adds the name and UUID to to HashMap to follow */
+  public void follow(String name, UUID id) {
+    followingMap.put(name, id);
   }
 }
