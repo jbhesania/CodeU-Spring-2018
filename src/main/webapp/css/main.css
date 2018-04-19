@@ -21,7 +21,7 @@ body {
   font-size: 18px;
   line-height: 1.6;
   color: #444;
-  background-color: white;
+  background-color: #EAE594;
 }
 
 nav {
@@ -29,7 +29,7 @@ nav {
   width: 100%;
   top: 0;
   left: 0;
-  background-color: rgb(56, 168, 88);
+  background-color: #708E29;
 }
 
 hr{
@@ -46,7 +46,7 @@ nav a {
 }
 
 nav a:hover{
-  color: rgb(255, 252, 208);
+  color: #708E29;
 }
 
 #navTitle {
@@ -60,7 +60,7 @@ nav a:hover{
 }
 
 h1 {
-  color: #5e5e5e;
+  color: #67280B;
 }
 
 input {
@@ -79,4 +79,7 @@ button:hover {
   background-color: #4CAF50; /* Green */
   color: white;
   box-shadow: 0 10px 10px 0 rgba(0,0,0,0.24),0 10px 20px 0 rgba(0,0,0,0.19);
+}
+p{
+  color: #67280B;
 }
