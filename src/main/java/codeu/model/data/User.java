@@ -40,6 +40,7 @@ public class User {
     this.password = password;
     this.creation = creation;
     this.followingMap = new HashMap<UUID, String>();
+    followingMap.put(id, name);
   }
 
   /** Returns the ID of this User. */
