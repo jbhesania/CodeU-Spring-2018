@@ -26,6 +26,15 @@
             <li>Newest user: ${newestUser}</li>
         </ul>
 
+        <h2>Import Data</h2>
+        <% if(request.getAttribute("error") != null){ %>
+            <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+        <% } %>
+        <form action = "UploadServlet" method = "post" enctype = "multipart/form-data">
+            File:
+            <input type="file" name="file" id="file" /> <br/>
+            <input type="submit" value="Upload" name="upload" id="upload" />
+        </form>
     </div>
   </body>
 </html> 

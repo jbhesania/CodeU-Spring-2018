@@ -20,16 +20,17 @@ import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 /** Servlet class responsible for the chat page. */
 public class ChatServlet extends HttpServlet {
