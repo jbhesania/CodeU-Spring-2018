@@ -70,13 +70,10 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         User user = new User(uuid, userName, password, creationTime);
         users.add(user);
-             System.out.println("AAAAAAAAAAAAAAAAAAINSIDE OF LOADUSERS AAAAAAAA" + userName);
 
         EmbeddedEntity followingMap = (EmbeddedEntity) entity.getProperty("followingMap");
         if (followingMap != null) {
-          System.out.println("Confirm that following map is not null");
           for (String key : followingMap.getProperties().keySet()) {
-             System.out.println("GOING THROUGH THE KEYSET WHEN LOADING USERS" + key);
              user.follow(key, UUID.fromString((String) followingMap.getProperty(key)));
           }
         }   
@@ -161,22 +158,18 @@ public class PersistentDataStore {
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
-    Entity userEntity = new Entity("chat-users");
+    Entity userEntity = new Entity("chat-users", user.getId().toString());
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
-
-    System.out.println("In method writeThrough");
-
+    
     EmbeddedEntity embeddedHashTable = new EmbeddedEntity();
     HashMap<String, UUID> followMap = user.getFollowingMap();
     for (String key : followMap.keySet()) { 
-        System.out.println("AAAAAAA" + user.getName() + "follows" + key);
         embeddedHashTable.setProperty(key, followMap.get(key).toString());
     }
-    userEntity.setProperty("followingMap", embeddedHashTable);
-    
+    userEntity.setProperty("followingMap", embeddedHashTable);  
 
     datastore.put(userEntity);
   }
