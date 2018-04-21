@@ -23,9 +23,11 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -68,6 +70,14 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         User user = new User(uuid, userName, password, creationTime);
         users.add(user);
+
+        EmbeddedEntity followingMap = (EmbeddedEntity) entity.getProperty("followingMap");
+        if (followingMap != null) {
+          for (String key : followingMap.getProperties().keySet()) {
+             user.follow(key, UUID.fromString((String) followingMap.getProperty(key)));
+          }
+        }   
+
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
         // occur include network errors, Datastore service errors, authorization errors,
@@ -148,11 +158,19 @@ public class PersistentDataStore {
 
   /** Write a User object to the Datastore service. */
   public void writeThrough(User user) {
-    Entity userEntity = new Entity("chat-users");
+    Entity userEntity = new Entity("chat-users", user.getId().toString());
     userEntity.setProperty("uuid", user.getId().toString());
     userEntity.setProperty("username", user.getName());
     userEntity.setProperty("password", user.getPassword());
     userEntity.setProperty("creation_time", user.getCreationTime().toString());
+    
+    EmbeddedEntity embeddedHashTable = new EmbeddedEntity();
+    HashMap<String, UUID> followMap = user.getFollowingMap();
+    for (String key : followMap.keySet()) { 
+        embeddedHashTable.setProperty(key, followMap.get(key).toString());
+    }
+    userEntity.setProperty("followingMap", embeddedHashTable);  
+
     datastore.put(userEntity);
   }
 
