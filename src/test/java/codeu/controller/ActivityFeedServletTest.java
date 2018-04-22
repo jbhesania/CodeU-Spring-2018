@@ -14,7 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
@@ -133,7 +132,7 @@ public class ActivityFeedServletTest {
 
         //mockCurrent attributes
         Mockito.when(mockCurrent.getName()).thenReturn("username");
-        Mockito.when(mockCurrent.follows(any())).thenReturn(false);
+        Mockito.when(mockCurrent.follows(any(UUID.class))).thenReturn(false);
 
         //setting up a way to retrieve activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -245,7 +244,7 @@ public class ActivityFeedServletTest {
 
         //mockCurrent attributes
         Mockito.when(mockCurrent.getName()).thenReturn("username");
-        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
+        Mockito.when(mockCurrent.follows(any(UUID.class))).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -358,7 +357,7 @@ public class ActivityFeedServletTest {
 
         //mockCurrent attributes
         Mockito.when(mockCurrent.getName()).thenReturn("username");
-        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
+        Mockito.when(mockCurrent.follows(any(UUID.class))).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -467,7 +466,7 @@ public class ActivityFeedServletTest {
 
         //mockCurrent attributes
         Mockito.when(mockCurrent.getName()).thenReturn("username");
-        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
+        Mockito.when(mockCurrent.follows(any(UUID.class))).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -578,7 +577,7 @@ public class ActivityFeedServletTest {
 
         //mockCurrent attributes
         Mockito.when(mockCurrent.getName()).thenReturn("username");
-        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
+        Mockito.when(mockCurrent.follows(any(UUID.class))).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -688,7 +687,7 @@ public class ActivityFeedServletTest {
 
         //mockCurrent attributes
         Mockito.when(mockCurrent.getName()).thenReturn("username");
-        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
+        Mockito.when(mockCurrent.follows(any(UUID.class))).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
