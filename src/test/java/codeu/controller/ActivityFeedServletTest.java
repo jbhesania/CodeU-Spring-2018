@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 
@@ -59,10 +60,10 @@ public class ActivityFeedServletTest {
     }
 
     /**
-     *  tests 3 different input types (3 with same time)
+     *  tests that if user does not follow --> nothing is printed (in this case user does not even follow self
      */
     @Test
-    public void testDoGet_BaseCase3DifferentInputs3SameTime() throws IOException, ServletException {
+    public void testDoGet_BaseCaseNoFollows() throws IOException, ServletException {
         PersistentStorageAgent mockStorage = Mockito.mock(PersistentStorageAgent.class);
         activityFeedServlet.setPersistentStorageAgent(mockStorage);
 
@@ -73,6 +74,7 @@ public class ActivityFeedServletTest {
         Conversation mockConversation = Mockito.mock(Conversation.class);
         Message mockMessage = Mockito.mock(Message.class);
         User mockUser = Mockito.mock(User.class);
+        User mockCurrent = Mockito.mock(User.class);
 
         HttpSession mockSession = Mockito.mock(HttpSession.class);
         Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
@@ -90,6 +92,117 @@ public class ActivityFeedServletTest {
 
         List<User> permUserList = new ArrayList<>();
         permUserList.add(mockUser);
+        permUserList.add(mockCurrent);
+
+        List<User> userList = new ArrayList<>();
+        userList.add(mockUser);
+
+        //setting up the data to use
+        try {
+            Mockito.when(mockStorage.loadConversations()).thenReturn(permConversationList, conversationList);
+            Mockito.when(mockStorage.loadMessages()).thenReturn(messageList);
+            Mockito.when(mockStorage.loadUsers()).thenReturn(permUserList, userList);
+        }
+        catch (PersistentDataStoreException e) {
+            throw new IOException(e);
+        }
+        Instant userTime = Instant.now();
+        Instant conversationTime = userTime;
+        Instant messageTime = userTime;
+
+        //to check if the updates are in the correct order
+        List<String> checkUpdates = new ArrayList<>();
+        checkUpdates.add(userTime.toString() + ": user name joined!");
+
+        //mockConversation attributes
+        Mockito.when(mockConversation.getCreationTime()).thenReturn(conversationTime);
+        Mockito.when(mockConversation.getTitle()).thenReturn("conversation title");
+        Mockito.when(mockConversation.getId()).thenReturn(uuidConversation);
+        Mockito.when(mockConversation.getOwnerId()).thenReturn(uuidUser);
+
+        //mockMessage attributes
+        Mockito.when(mockMessage.getCreationTime()).thenReturn(messageTime);
+        Mockito.when(mockMessage.getAuthorId()).thenReturn(uuidUser);
+        Mockito.when(mockMessage.getConversationId()).thenReturn(uuidConversation);
+        Mockito.when(mockMessage.getContent()).thenReturn("message content");
+
+        //mockUser attributes
+        Mockito.when(mockUser.getCreationTime()).thenReturn(userTime);
+        Mockito.when(mockUser.getId()).thenReturn(uuidUser);
+        Mockito.when(mockUser.getName()).thenReturn("user name");
+
+        //mockCurrent attributes
+        Mockito.when(mockCurrent.getName()).thenReturn("username");
+        Mockito.when(mockCurrent.follows(any())).thenReturn(false);
+
+        //setting up a way to retrieve activity attribute from mock request
+        final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
+        // Mock setAttribute
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                String key = invocation.getArgument(0);
+                Object value = invocation.getArgument(1);
+                attributes.put(key, value);
+                System.out.println("put attribute key="+key+", value="+value);
+                return null;
+            }
+        }).when(mockRequest).setAttribute(Mockito.anyString(), Mockito.any());
+
+        // Mock getAttribute
+        Mockito.doAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                String key = invocation.getArgument(0);
+                Object value = attributes.get(key);
+                System.out.println("get attribute value for key="+key+" : "+value);
+                return value;
+            }
+        }).when(mockRequest).getAttribute(Mockito.anyString());
+
+
+        activityFeedServlet.doGet(mockRequest, mockResponse);
+
+        Mockito.verify(mockRequest, Mockito.atLeastOnce()).setAttribute(eq("activity"), any(List.class));
+        List<String> updates = (List<String>) mockRequest.getAttribute("activity");
+        Assert.assertEquals(checkUpdates, updates);
+        Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+    }
+
+    /**
+     *  tests 3 different input types (3 with same time)
+     */
+    @Test
+    public void testDoGet_BaseCase3DifferentInputs3SameTime() throws IOException, ServletException {
+        PersistentStorageAgent mockStorage = Mockito.mock(PersistentStorageAgent.class);
+        activityFeedServlet.setPersistentStorageAgent(mockStorage);
+
+        UUID uuidUser = UUID.randomUUID();
+        UUID uuidConversation = UUID.randomUUID();
+
+        //mock objects to use
+        Conversation mockConversation = Mockito.mock(Conversation.class);
+        Message mockMessage = Mockito.mock(Message.class);
+        User mockUser = Mockito.mock(User.class);
+        User mockCurrent = Mockito.mock(User.class);
+
+        HttpSession mockSession = Mockito.mock(HttpSession.class);
+        Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+        Mockito.when(mockSession.getAttribute("user")).thenReturn("username");
+
+        //setting up lists for traversal
+        List<Conversation> permConversationList = new ArrayList<>();
+        permConversationList.add(mockConversation);
+
+        List<Conversation> conversationList = new ArrayList<>();
+        conversationList.add(mockConversation);
+
+        List<Message> messageList = new ArrayList<>();
+        messageList.add(mockMessage);
+
+        List<User> permUserList = new ArrayList<>();
+        permUserList.add(mockUser);
+        permUserList.add(mockCurrent);
 
         List<User> userList = new ArrayList<>();
         userList.add(mockUser);
@@ -129,6 +242,10 @@ public class ActivityFeedServletTest {
         Mockito.when(mockUser.getCreationTime()).thenReturn(userTime);
         Mockito.when(mockUser.getId()).thenReturn(uuidUser);
         Mockito.when(mockUser.getName()).thenReturn("user name");
+
+        //mockCurrent attributes
+        Mockito.when(mockCurrent.getName()).thenReturn("username");
+        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -179,6 +296,7 @@ public class ActivityFeedServletTest {
         Conversation mockConversation = Mockito.mock(Conversation.class);
         Message mockMessage = Mockito.mock(Message.class);
         User mockUser = Mockito.mock(User.class);
+        User mockCurrent = Mockito.mock(User.class);
 
         HttpSession mockSession = Mockito.mock(HttpSession.class);
         Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
@@ -187,6 +305,10 @@ public class ActivityFeedServletTest {
         //setting up lists for traversal
         List<Conversation> permConversationList = new ArrayList<>();
         permConversationList.add(mockConversation);
+
+        List<User> permUserList = new ArrayList<>();
+        permUserList.add(mockUser);
+        permUserList.add(mockCurrent);
 
         List<Conversation> conversationList = new ArrayList<>();
         conversationList.add(mockConversation);
@@ -197,11 +319,12 @@ public class ActivityFeedServletTest {
         List<User> userList = new ArrayList<>();
         userList.add(mockUser);
 
+
         //setting up the data to use
         try {
             Mockito.when(mockStorage.loadConversations()).thenReturn(permConversationList, conversationList);
             Mockito.when(mockStorage.loadMessages()).thenReturn(messageList);
-            Mockito.when(mockStorage.loadUsers()).thenReturn(userList);
+            Mockito.when(mockStorage.loadUsers()).thenReturn(permUserList, userList);
         }
         catch (PersistentDataStoreException e) {
             throw new IOException(e);
@@ -232,6 +355,10 @@ public class ActivityFeedServletTest {
         Mockito.when(mockUser.getCreationTime()).thenReturn(userTime);
         Mockito.when(mockUser.getId()).thenReturn(uuidUser);
         Mockito.when(mockUser.getName()).thenReturn("user name");
+
+        //mockCurrent attributes
+        Mockito.when(mockCurrent.getName()).thenReturn("username");
+        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -282,12 +409,17 @@ public class ActivityFeedServletTest {
         Conversation mockConversation = Mockito.mock(Conversation.class);
         Message mockMessage = Mockito.mock(Message.class);
         User mockUser = Mockito.mock(User.class);
+        User mockCurrent = Mockito.mock(User.class);
 
         HttpSession mockSession = Mockito.mock(HttpSession.class);
         Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
         Mockito.when(mockSession.getAttribute("user")).thenReturn("username");
 
         //setting up lists for traversal
+        List<User> permUserList = new ArrayList<>();
+        permUserList.add(mockUser);
+        permUserList.add(mockCurrent);
+
         List<Conversation> conversationList = new ArrayList<>();
         conversationList.add(mockConversation);
 
@@ -301,7 +433,7 @@ public class ActivityFeedServletTest {
         try {
             Mockito.when(mockStorage.loadConversations()).thenReturn(conversationList);
             Mockito.when(mockStorage.loadMessages()).thenReturn(messageList);
-            Mockito.when(mockStorage.loadUsers()).thenReturn(userList);
+            Mockito.when(mockStorage.loadUsers()).thenReturn(permUserList, userList);
         }
         catch (PersistentDataStoreException e) {
             throw new IOException(e);
@@ -332,6 +464,10 @@ public class ActivityFeedServletTest {
         Mockito.when(mockUser.getCreationTime()).thenReturn(userTime);
         Mockito.when(mockUser.getId()).thenReturn(uuidUser);
         Mockito.when(mockUser.getName()).thenReturn("user name");
+
+        //mockCurrent attributes
+        Mockito.when(mockCurrent.getName()).thenReturn("username");
+        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -383,12 +519,18 @@ public class ActivityFeedServletTest {
         Conversation mockConversation = Mockito.mock(Conversation.class);
         User mockUser1 = Mockito.mock(User.class);
         User mockUser2 = Mockito.mock(User.class);
+        User mockCurrent = Mockito.mock(User.class);
 
         HttpSession mockSession = Mockito.mock(HttpSession.class);
         Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
         Mockito.when(mockSession.getAttribute("user")).thenReturn("username");
 
         //setting up lists for traversal
+        List<User> permUserList = new ArrayList<>();
+        permUserList.add(mockUser1);
+        permUserList.add(mockUser2);
+        permUserList.add(mockCurrent);
+
         List<Conversation> conversationList = new ArrayList<>();
         conversationList.add(mockConversation);
 
@@ -402,7 +544,7 @@ public class ActivityFeedServletTest {
         try {
             Mockito.when(mockStorage.loadConversations()).thenReturn(conversationList);
             Mockito.when(mockStorage.loadMessages()).thenReturn(messageList);
-            Mockito.when(mockStorage.loadUsers()).thenReturn(userList);
+            Mockito.when(mockStorage.loadUsers()).thenReturn(permUserList, userList);
         }
         catch (PersistentDataStoreException e) {
             throw new IOException(e);
@@ -433,6 +575,10 @@ public class ActivityFeedServletTest {
         Mockito.when(mockUser2.getCreationTime()).thenReturn(userTime2);
         Mockito.when(mockUser2.getId()).thenReturn(uuidUser2);
         Mockito.when(mockUser2.getName()).thenReturn("user name 2");
+
+        //mockCurrent attributes
+        Mockito.when(mockCurrent.getName()).thenReturn("username");
+        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
@@ -484,12 +630,19 @@ public class ActivityFeedServletTest {
         User mockUser1 = Mockito.mock(User.class);
         User mockUser2 = Mockito.mock(User.class);
         User mockUser3 = Mockito.mock(User.class);
+        User mockCurrent = Mockito.mock(User.class);
 
         HttpSession mockSession = Mockito.mock(HttpSession.class);
         Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
         Mockito.when(mockSession.getAttribute("user")).thenReturn("username");
 
         //setting up lists for traversal
+        List<User> permUserList = new ArrayList<>();
+        permUserList.add(mockUser1);
+        permUserList.add(mockUser2);
+        permUserList.add(mockUser3);
+        permUserList.add(mockCurrent);
+
         List<Conversation> conversationList = new ArrayList<>();
 
         List<Message> messageList = new ArrayList<>();
@@ -503,7 +656,7 @@ public class ActivityFeedServletTest {
         try {
             Mockito.when(mockStorage.loadConversations()).thenReturn(conversationList);
             Mockito.when(mockStorage.loadMessages()).thenReturn(messageList);
-            Mockito.when(mockStorage.loadUsers()).thenReturn(userList);
+            Mockito.when(mockStorage.loadUsers()).thenReturn(permUserList, userList);
         }
         catch (PersistentDataStoreException e) {
             throw new IOException(e);
@@ -532,6 +685,10 @@ public class ActivityFeedServletTest {
         Mockito.when(mockUser3.getCreationTime()).thenReturn(userTime3);
         Mockito.when(mockUser3.getId()).thenReturn(uuidUser3);
         Mockito.when(mockUser3.getName()).thenReturn("user name 3");
+
+        //mockCurrent attributes
+        Mockito.when(mockCurrent.getName()).thenReturn("username");
+        Mockito.when(mockCurrent.follows(any())).thenReturn(true);
 
         //setting up a way to retrive activity attribute from mock request
         final Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
