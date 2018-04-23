@@ -59,10 +59,6 @@ public class UploadServletTest {
         uploadServlet.doPost(mockRequest, mockResponse);
         Mockito.verify(mockRequest).setAttribute("error", "No file uploaded.");
         Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
-
-
-//        Mockito.when(request.getContentType()).thenReturn("multipart/form-data; boundary=someBoundary");
-
     }
 
     @Test
@@ -110,8 +106,6 @@ public class UploadServletTest {
         HttpSession mockSession = Mockito.mock(HttpSession.class);
         Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
-        uploadServlet.doPost(mockRequest, mockResponse);
-
         UserStore mockUserStore = Mockito.mock(UserStore.class);
         ConversationStore mockConversationStore = Mockito.mock(ConversationStore.class);
         MessageStore mockMessageStore = Mockito.mock(MessageStore.class);
@@ -119,6 +113,8 @@ public class UploadServletTest {
         uploadServlet.setUserStore(mockUserStore);
         uploadServlet.setConversationStore(mockConversationStore);
         uploadServlet.setMessageStore(mockMessageStore);
+        
+        uploadServlet.doPost(mockRequest, mockResponse);
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
@@ -126,7 +122,7 @@ public class UploadServletTest {
         Mockito.verify(mockConversationStore).addConversation(Mockito.any(Conversation.class));
         Mockito.verify(mockMessageStore).addMessage(Mockito.any(Message.class));
 
-        Mockito.verify(mockResponse).sendRedirect("/chat/text");
+        Mockito.verify(mockResponse).sendRedirect("/chat/text.txt");
     }
 
 

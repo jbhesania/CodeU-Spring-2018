@@ -49,6 +49,7 @@ public class PersistentDataStoreTest {
     Instant creationTwo = Instant.ofEpochMilli(2000);
     String passwordTwo = "test_password_two";
     User inputUserTwo = new User(idTwo, nameTwo, passwordTwo, creationTwo);
+    inputUserTwo.follow(inputUserOne);
 
     // save
     persistentDataStore.writeThrough(inputUserOne);
@@ -59,16 +60,24 @@ public class PersistentDataStoreTest {
 
     // confirm that what we saved matches what we loaded
     User resultUserOne = resultUsers.get(0);
+    User resultUserTwo = resultUsers.get(1);
+    if(resultUserOne.getName().equals(nameTwo)) {
+      resultUserOne = resultUsers.get(1);
+      resultUserTwo = resultUsers.get(0);
+    }
+
     Assert.assertEquals(idOne, resultUserOne.getId());
     Assert.assertEquals(nameOne, resultUserOne.getName());
     Assert.assertEquals(passwordOne, resultUserOne.getPassword());
     Assert.assertEquals(creationOne, resultUserOne.getCreationTime());
+    Assert.assertTrue(resultUserOne.follows(resultUserOne.getId()));
 
-    User resultUserTwo = resultUsers.get(1);
     Assert.assertEquals(idTwo, resultUserTwo.getId());
     Assert.assertEquals(nameTwo, resultUserTwo.getName());
     Assert.assertEquals(passwordTwo, resultUserTwo.getPassword());
     Assert.assertEquals(creationTwo, resultUserTwo.getCreationTime());
+    Assert.assertTrue(resultUserTwo.follows(resultUserTwo.getId()));
+    Assert.assertTrue(resultUserTwo.follows(resultUserOne.getId()));
   }
 
   @Test
