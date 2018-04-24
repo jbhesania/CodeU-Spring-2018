@@ -15,8 +15,10 @@
 package codeu.model.data;
 
 import java.time.Instant;
-import java.util.UUID;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 /** Class representing a registered user. */
 public class User {
@@ -25,6 +27,7 @@ public class User {
   private final String password;
   private final Instant creation;
   private final HashMap<String, UUID> followingMap;
+  private boolean admin;
 
   /**
    * Constructs a new User. Makes user follow themselves by default. 
@@ -41,6 +44,9 @@ public class User {
     this.creation = creation;
     this.followingMap = new HashMap<String, UUID>();
     followingMap.put(name, id);
+
+    List<String> admins = Arrays.asList("lloza", "cari", "joyaan", "linda");
+    this.admin = admins.contains(name);
   }
 
   /** Returns the ID of this User. */
@@ -93,4 +99,10 @@ public class User {
   public void follow(String name, UUID id) {
     followingMap.put(name, id);
   }
+
+  public boolean isAdmin() {return admin;}
+
+  public void makeAdmin() {admin = true;}
+
+  public void removeAdmin() {admin = false;}
 }

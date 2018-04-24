@@ -2,7 +2,6 @@ package codeu.controller;
 
 import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
-import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -71,12 +70,20 @@ public class ProfilePageServlet extends HttpServlet {
     String sessionUserName = (String) request.getSession().getAttribute("user");
     User sessionUser = userStore.getUser(sessionUserName);
 
-    //True means we need to follow them
-    if(request.getParameter("follow").equals("true")) {
-      sessionUser.follow(pageUser);
-    }
-    else {
-      sessionUser.unfollow(pageUser);
+
+    if(request.getParameter("follow") != null) {
+      //True means we need to follow them
+      if (request.getParameter("follow").equals("true")) {
+        sessionUser.follow(pageUser);
+      } else {
+        sessionUser.unfollow(pageUser);
+      }
+    } else {
+      if (request.getParameter("admin").equals("true")) {
+        pageUser.makeAdmin();
+      } else {
+        pageUser.removeAdmin();
+      }
     }
     
     userStore.addUser(sessionUser);

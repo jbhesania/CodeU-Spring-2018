@@ -41,24 +41,35 @@ User sessionUser = (User) request.getAttribute("sessionUser");
   <div id="container">
     <h1><%= pageUser.getName() %>'s Profile Page
       <a href="" style="float: right">&#8635;</a></h1>
-    
-  <% if(sessionUser != null){
-       if(sessionUser.follows(pageUser.getId())){ %>
-         <form action="" method=POST>
-           <button type="submit" name="follow" value="false">Unfollow</button>
-         </form>
-       <% } else { %>
-          <form action="" method=POST>
-            <button type="submit" name="follow" value="true">Follow</button>
-          </form>
-       <% }
-     }
-     else { %>
-       <p><a href="/login">Login</a> to send a message.</p>
-       <p> <% request.getSession().getAttribute("user"); %></p>
-  <% } %>
 
+      <% if(sessionUser == null){ %>
+           <p><a href="/login">Login</a> to send a message.</p>
+           <p> <% request.getSession().getAttribute("user"); %></p>
+      <% } else {
+        if(!sessionUser.equals(pageUser)){
+            if(sessionUser.follows(pageUser.getId())){ %>
+              <form action="" method=POST>
+                <button type="submit" name="follow" value="false">Unfollow</button>
+              </form>
+            <% } else { %>
+               <form action="" method=POST>
+                 <button type="submit" name="follow" value="true">Follow</button>
+               </form>
+            <% }
+
+            if(sessionUser.isAdmin()) {
+               if(pageUser.isAdmin()){ %>
+                 <form action="" method=POST>
+                     <button type="submit" name="admin" value="false">Remove Admin</button>
+                 </form>
+               <% } else { %>
+                  <form action="" method=POST>
+                     <button type="submit" name="admin" value="true">Make Admin</button>
+                  </form>
+               <% }
+            }
+        }
+      } %>
   </div>
-
 </body>
 </html>
