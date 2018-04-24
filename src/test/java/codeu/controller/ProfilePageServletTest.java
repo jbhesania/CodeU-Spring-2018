@@ -18,7 +18,6 @@ import codeu.model.data.User;
 import codeu.model.store.basic.UserStore;
 import org.junit.Before;
 import org.junit.Test;
-import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.Mockito;
 
 import javax.servlet.RequestDispatcher;
@@ -108,6 +107,7 @@ public class ProfilePageServletTest {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("sessionUserName");
     Mockito.when(mockUserStore.getUser("sessionUserName")).thenReturn(mockSessionUser);
     Mockito.when(mockRequest.getParameter("follow")).thenReturn("true");
+    Mockito.when(mockRequest.getParameter("admin")).thenReturn(null);
     
     profilePageServlet.doPost(mockRequest, mockResponse);
 
@@ -131,11 +131,61 @@ public class ProfilePageServletTest {
     Mockito.when(mockSession.getAttribute("user")).thenReturn("sessionUserName");
     Mockito.when(mockUserStore.getUser("sessionUserName")).thenReturn(mockSessionUser);
     Mockito.when(mockRequest.getParameter("follow")).thenReturn("false");
+    Mockito.when(mockRequest.getParameter("admin")).thenReturn(null);
     
     profilePageServlet.doPost(mockRequest, mockResponse);
 
     Mockito.verify(mockSessionUser).unfollow(mockPageUser);
     Mockito.verify(mockResponse).sendRedirect("/users/testuser");
   }
+
+  @Test
+  public void testDoPost_MakeAdmin() throws IOException, ServletException {
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    profilePageServlet.setUserStore(mockUserStore);
+
+    User mockPageUser = Mockito.mock(User.class);
+    User mockSessionUser = Mockito.mock(User.class);
+
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/testuser");
+    Mockito.when(mockUserStore.getUser("testuser")).thenReturn(mockPageUser);
+
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("cari");
+    Mockito.when(mockUserStore.getUser("cari")).thenReturn(mockSessionUser);
+    Mockito.when(mockRequest.getParameter("follow")).thenReturn(null);
+    Mockito.when(mockRequest.getParameter("admin")).thenReturn("true");
+
+    profilePageServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockPageUser).makeAdmin();
+    Mockito.verify(mockResponse).sendRedirect("/users/testuser");
+  }
+
+  @Test
+  public void testDoPost_RemoveAdmin() throws IOException, ServletException {
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    profilePageServlet.setUserStore(mockUserStore);
+
+    User mockPageUser = Mockito.mock(User.class);
+    User mockSessionUser = Mockito.mock(User.class);
+
+    Mockito.when(mockRequest.getRequestURI()).thenReturn("/users/cari");
+    Mockito.when(mockUserStore.getUser("cari")).thenReturn(mockPageUser);
+
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("lloza");
+    Mockito.when(mockUserStore.getUser("lloza")).thenReturn(mockSessionUser);
+    Mockito.when(mockRequest.getParameter("follow")).thenReturn(null);
+    Mockito.when(mockRequest.getParameter("admin")).thenReturn("false");
+
+    profilePageServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockPageUser).removeAdmin();
+    Mockito.verify(mockResponse).sendRedirect("/users/cari");
+  }
+
 
 }
