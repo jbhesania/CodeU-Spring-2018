@@ -90,6 +90,8 @@ public class ActivityFeedServlet extends HttpServlet {
                 List<User> userList = persistentStorageAgent.loadUsers();
                 List<String> activityList = new ArrayList<>();
 
+                User currentUser = findUser(permUserList, username);
+
                 //sorting arrays
                 conversationList.sort(new sortTimeC());
                 messageList.sort(new sortTimeM());
@@ -125,6 +127,10 @@ public class ActivityFeedServlet extends HttpServlet {
                         event = findUser(permUserList, conversation.getOwnerId()).getName() + " created a new conversation: "
                                 + conversation.getTitle();
 
+                        if (currentUser.follows(conversation.getOwnerId())){
+                            activityList.add(time + event);
+                        }
+
                         //reset not chosen
                         if (messageListIterator.hasNext()) {
                             messageListIterator.next();
@@ -141,6 +147,10 @@ public class ActivityFeedServlet extends HttpServlet {
                                 + findConversation(permConversationList, message.getConversationId()) + ": "
                                 + message.getContent();
 
+                        if (currentUser.follows(message.getAuthorId())) {
+                            activityList.add(time + event);
+                        }
+
                         //reset not chosen
                         if (conversationListIterator.hasNext()) {
                             conversationListIterator.next();
@@ -156,6 +166,8 @@ public class ActivityFeedServlet extends HttpServlet {
                         time = user.getCreationTime().toString() + ": ";
                         event = user.getName() + " joined!";
 
+                        activityList.add(time + event);
+
                         //reset not chosen
                         if (conversationListIterator.hasNext()) {
                             conversationListIterator.next();
@@ -167,7 +179,6 @@ public class ActivityFeedServlet extends HttpServlet {
                         userListIterator.remove();
                     }
 
-                    activityList.add(time + event);
                 }
                 request.setAttribute("activity", activityList);
                 request.getRequestDispatcher("/WEB-INF/view/activityfeed.jsp").forward(request, response);
@@ -247,6 +258,17 @@ public class ActivityFeedServlet extends HttpServlet {
 
         return currentMin + 1;
 
+    }
+    /**
+     * This is a helper method to help find and retrieve the user with the UUID inputted
+     */
+    public User findUser (List<User> userList, String username) {
+        for (User user : userList) {
+            if (user.getName().equals(username)) {
+                return user;
+            }
+        }
+        return null;
     }
 
     /**
