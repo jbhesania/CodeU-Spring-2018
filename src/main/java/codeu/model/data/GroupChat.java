@@ -11,9 +11,9 @@ public class GroupChat extends Conversation{
 
     public GroupChat(UUID id, UUID ownerID, User owner, String title, Instant creation) {
         super(id, ownerID, title, creation);
-        this.members = new HashSet<>();
-        this.leader = owner;
-        this.members.add(owner);
+        members = new HashSet<>();
+        members.add(owner);
+        leader = owner;
     }
 
     /** Returns leader of group chat **/

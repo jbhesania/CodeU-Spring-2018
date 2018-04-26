@@ -15,6 +15,7 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.GroupChat;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import com.google.appengine.api.datastore.*;
@@ -162,10 +163,17 @@ public class PersistentDataStore {
     
     EmbeddedEntity embeddedHashTable = new EmbeddedEntity();
     HashMap<String, UUID> followMap = user.getFollowingMap();
-    for (String key : followMap.keySet()) { 
+    for (String key : followMap.keySet()) {
         embeddedHashTable.setProperty(key, followMap.get(key).toString());
     }
-    userEntity.setProperty("followingMap", embeddedHashTable);  
+    userEntity.setProperty("followingMap", embeddedHashTable);
+
+    EmbeddedEntity embeddedHashSet = new EmbeddedEntity();
+    //HashSet<GroupChat> groupChatSet = user.getGroupChatSet();
+    for (String key : followMap.keySet()) {
+      embeddedHashTable.setProperty(key, followMap.get(key).toString());
+    }
+    userEntity.setProperty("GroupChatMap", embeddedHashSet);
 
     datastore.put(userEntity);
   }

@@ -50,7 +50,7 @@ public class GroupChatTest {
     Assert.assertEquals(title, groupChat.getTitle());
     Assert.assertEquals(creation, groupChat.getCreationTime());
     Assert.assertEquals(user, groupChat.getLeader());
-    Assert.assertEquals(groupChat, groupChat.getMembers());
+    Assert.assertEquals(testSet, groupChat.getMembers());
 
   }
 }

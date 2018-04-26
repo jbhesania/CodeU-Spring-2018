@@ -43,7 +43,6 @@ public class User {
     this.password = password;
     this.creation = creation;
     this.followingMap = new HashMap<String, UUID>();
-    this.groupChatSet = new HashSet<GroupChat>();
     followingMap.put(name, id);
 
     List<String> admins = Arrays.asList("lloza", "cari", "joyaan", "linda");
