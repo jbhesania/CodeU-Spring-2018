@@ -14,6 +14,7 @@ public class GroupChat extends Conversation{
         members = new HashSet<>();
         members.add(owner);
         leader = owner;
+        owner.addGroupChat(this);
     }
 
     /** Returns leader of group chat **/
