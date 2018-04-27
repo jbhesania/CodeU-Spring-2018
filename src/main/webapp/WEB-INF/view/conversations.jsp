@@ -54,7 +54,9 @@
       <form action="/conversations" method="POST">
           <div class="form-group">
             <label class="form-control-label">Group Name:</label>
-          <input type="text" name="conversationTitle">
+            <input type="text" name="conversationTitle">
+            <label class="form-control-label">Group Members:</label>
+            <input type="text" name="members">
         </div>
 
         <button type="submit" name="group">Create Group Chat</button>
