@@ -129,16 +129,4 @@ public class User {
     return groupChatSet;
   }
 
-
-  /** removes a groupchat from the set of groupchats the user is in**/
-  public void removeGroupChat(GroupChat groupChat) {
-    if (groupChat != null) {
-      groupChatSet.remove(groupChat);
-    }
-  }
-
-  /** returns the list of group chats that the user is in **/
-  public HashSet<GroupChat> getGroupChatSet() {
-    return groupChatSet;
-  }
 }
