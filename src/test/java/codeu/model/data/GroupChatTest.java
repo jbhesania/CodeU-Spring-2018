@@ -18,7 +18,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class GroupChatTest {
@@ -35,22 +35,22 @@ public class GroupChatTest {
 
     //creating group chat variables
     UUID id = UUID.randomUUID();
-    UUID owner = UUID.randomUUID();
     String title = "Test_Title_Group";
     Instant creation = Instant.now();
 
-    //hashset for testing
-    HashSet<User> testSet = new HashSet<>();
-    testSet.add(user);
+    //hashmap for testing
+    HashMap<String, UUID> testMap = new HashMap<>();
+    testMap.put(title, idUser);
 
-    GroupChat groupChat = new GroupChat(id, owner, user, title, creation);
+     GroupChat groupChat = new GroupChat(id, idUser, title, creation);
 
-    Assert.assertEquals(id, groupChat.getId());
-    Assert.assertEquals(owner, groupChat.getOwnerId());
-    Assert.assertEquals(title, groupChat.getTitle());
-    Assert.assertEquals(creation, groupChat.getCreationTime());
-    Assert.assertEquals(user, groupChat.getLeader());
-    Assert.assertEquals(testSet, groupChat.getMembers());
+     Assert.assertEquals(id, groupChat.getId());
+     Assert.assertEquals(idUser, groupChat.getOwnerId());
+     Assert.assertEquals(title, groupChat.getTitle());
+     Assert.assertEquals(creation, groupChat.getCreationTime());
+     Assert.assertEquals(testMap, groupChat.getMembers());
 
   }
+
+  
 }

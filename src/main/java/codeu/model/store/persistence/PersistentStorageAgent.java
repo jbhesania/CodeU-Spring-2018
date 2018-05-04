@@ -15,6 +15,7 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.GroupChat;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStore;
@@ -80,6 +81,16 @@ public class PersistentStorageAgent {
   }
 
   /**
+   * Retrieve all GroupChat objects from the Datastore service. The returned list may be empty.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<GroupChat> loadGroupChats() throws PersistentDataStoreException {
+    return persistentDataStore.loadGroupChats();
+  }
+
+  /**
    * Retrieve all Message objects from the Datastore service. The returned list may be empty.
    *
    * @throws PersistentDataStoreException if an error was detected during the load from the
@@ -97,6 +108,11 @@ public class PersistentStorageAgent {
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
     persistentDataStore.writeThrough(conversation);
+  }
+
+  /** Write a Message object to the Datastore service. */
+  public void writeThrough(GroupChat groupChat) {
+    persistentDataStore.writeThrough(groupChat);
   }
 
   /** Write a Conversation object to the Datastore service. */

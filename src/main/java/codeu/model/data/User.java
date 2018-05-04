@@ -29,7 +29,7 @@ public class User {
   private final Instant creation;
   private final HashMap<String, UUID> followingMap;
   private boolean admin;
-  private final HashSet<GroupChat> groupChatSet;
+  private final HashMap<String, UUID> groupChatMap;
 
   /**
    * Constructs a new User. Makes user follow themselves by default. 
@@ -45,7 +45,7 @@ public class User {
     this.password = password;
     this.creation = creation;
     this.followingMap = new HashMap<String, UUID>();
-    this.groupChatSet = new HashSet<GroupChat>();
+    this.groupChatMap = new HashMap<String, UUID>();
     followingMap.put(name, id);
 
     List<String> admins = Arrays.asList("lloza", "cari", "joyaan", "linda");
@@ -110,23 +110,23 @@ public class User {
   public void removeAdmin() {admin = false;}
 
   /** checks if user is in the group chat and returns true if user is **/
-  public boolean inGroupChat(GroupChat groupChat) { return groupChatSet.contains(this); }
+  public boolean inGroupChat(GroupChat groupChat) { return groupChatMap.containsKey(groupChat.title); }
 
   /** adds a groupchat to the set of groupchats the user is in **/
   public void addGroupChat(GroupChat groupChat) {
     if (groupChat != null) {
-      groupChatSet.add(groupChat);
+      groupChatMap.put(groupChat.title, groupChat.id);
     }
   }
 
   /** removes a groupchat from the set of groupchats the user is in**/
   public void removeGroupChat(GroupChat groupChat) {
-    groupChatSet.remove(groupChat);
+    groupChatMap.remove(groupChat.title, groupChat.id);
   }
 
   /** returns the list of group chats that the user is in **/
-  public HashSet<GroupChat> getGroupChatSet() {
-    return groupChatSet;
+  public HashMap<String, UUID> getGroupChatMap() {
+    return groupChatMap;
   }
 
 }
