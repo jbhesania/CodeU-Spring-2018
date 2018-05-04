@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.HashSet;
 
 /** Class representing a registered user. */
 public class User {
@@ -28,6 +29,7 @@ public class User {
   private final Instant creation;
   private final HashMap<String, UUID> followingMap;
   private boolean admin;
+  private final HashSet<GroupChat> groupChatSet;
 
   /**
    * Constructs a new User. Makes user follow themselves by default. 
@@ -43,6 +45,7 @@ public class User {
     this.password = password;
     this.creation = creation;
     this.followingMap = new HashMap<String, UUID>();
+    this.groupChatSet = new HashSet<GroupChat>();
     followingMap.put(name, id);
 
     List<String> admins = Arrays.asList("lloza", "cari", "joyaan", "linda");
@@ -105,4 +108,25 @@ public class User {
   public void makeAdmin() {admin = true;}
 
   public void removeAdmin() {admin = false;}
+
+  /** checks if user is in the group chat and returns true if user is **/
+  public boolean inGroupChat(GroupChat groupChat) { return groupChatSet.contains(this); }
+
+  /** adds a groupchat to the set of groupchats the user is in **/
+  public void addGroupChat(GroupChat groupChat) {
+    if (groupChat != null) {
+      groupChatSet.add(groupChat);
+    }
+  }
+
+  /** removes a groupchat from the set of groupchats the user is in**/
+  public void removeGroupChat(GroupChat groupChat) {
+    groupChatSet.remove(groupChat);
+  }
+
+  /** returns the list of group chats that the user is in **/
+  public HashSet<GroupChat> getGroupChatSet() {
+    return groupChatSet;
+  }
+
 }
