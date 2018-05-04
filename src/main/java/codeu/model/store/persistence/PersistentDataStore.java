@@ -168,13 +168,14 @@ public class PersistentDataStore {
     }
     userEntity.setProperty("followingMap", embeddedHashTable);
 
+    /**
     EmbeddedEntity embeddedHashSet = new EmbeddedEntity();
-    //HashSet<GroupChat> groupChatSet = user.getGroupChatSet();
+    HashSet<GroupChat> groupChatSet = user.getGroupChatSet();
     for (String key : followMap.keySet()) {
       embeddedHashTable.setProperty(key, followMap.get(key).toString());
     }
     userEntity.setProperty("GroupChatMap", embeddedHashSet);
-
+    **/
     datastore.put(userEntity);
   }
 
