@@ -208,7 +208,7 @@ public class PersistentDataStore {
     EmbeddedEntity embeddedHashTableGroupChat = new EmbeddedEntity();
     HashMap<String, UUID> groupChatMap = user.getGroupChatMap();
     for (String key : groupChatMap.keySet()) {
-      embeddedHashTable.setProperty(key, groupChatMap.get(key).toString());
+      embeddedHashTableGroupChat.setProperty(key, groupChatMap.get(key).toString());
     }
     userEntity.setProperty("groupChatMap", embeddedHashTableGroupChat);
 
