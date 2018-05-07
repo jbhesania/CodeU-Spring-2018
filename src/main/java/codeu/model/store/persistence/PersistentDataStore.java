@@ -132,10 +132,11 @@ public class PersistentDataStore {
     for (Entity entity : results.asIterable()) {
       try {
         UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
-        UUID ownerUuid = UUID.fromString((String) entity.getProperty("owner_uuid"));
+        UUID ownerId = UUID.fromString((String) entity.getProperty("owner_id"));
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
-        GroupChat groupChat = new GroupChat(uuid, ownerUuid, title, creationTime);
+        String ownerName = (String) entity.getProperty("owner_name");
+        GroupChat groupChat = new GroupChat(uuid, ownerId, title, creationTime, ownerName);
         groupChats.add(groupChat);
 
         EmbeddedEntity memberMap = (EmbeddedEntity) entity.getProperty("memberMap");
@@ -205,12 +206,12 @@ public class PersistentDataStore {
     }
     userEntity.setProperty("followingMap", embeddedHashTable);
 
-    EmbeddedEntity embeddedHashTableGroupChat = new EmbeddedEntity();
-    HashMap<String, UUID> groupChatMap = user.getGroupChatMap();
-    for (String key : groupChatMap.keySet()) {
-      embeddedHashTableGroupChat.setProperty(key, groupChatMap.get(key).toString());
-    }
-    userEntity.setProperty("groupChatMap", embeddedHashTableGroupChat);
+//    EmbeddedEntity embeddedHashTableGroupChat = new EmbeddedEntity();
+//    HashMap<String, UUID> groupChatMap = user.getGroupChatMap();
+//    for (String key : groupChatMap.keySet()) {
+//      embeddedHashTableGroupChat.setProperty(key, groupChatMap.get(key).toString());
+//    }
+//    userEntity.setProperty("groupChatMap", embeddedHashTableGroupChat);
 
     datastore.put(userEntity);
   }
@@ -240,9 +241,10 @@ public class PersistentDataStore {
   public void writeThrough(GroupChat groupChat) {
     Entity groupChatEntity = new Entity("chat-groupchats");
     groupChatEntity.setProperty("uuid", groupChat.getId().toString());
-    groupChatEntity.setProperty("owner_uuid", groupChat.getOwnerId().toString());
+    groupChatEntity.setProperty("owner_id", groupChat.getOwnerId().toString());
     groupChatEntity.setProperty("title", groupChat.getTitle());
     groupChatEntity.setProperty("creation_time", groupChat.getCreationTime().toString());
+    groupChatEntity.setProperty("owner_name", groupChat.getOwnerName());
 
     EmbeddedEntity embeddedHashTable = new EmbeddedEntity();
     HashMap<String, UUID> members = groupChat.getMembers();

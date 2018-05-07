@@ -1,42 +1,48 @@
 package codeu.model.data;
 
-import codeu.model.store.persistence.PersistentDataStoreException;
-import codeu.model.store.persistence.PersistentStorageAgent;
-
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class GroupChat extends Conversation{
-    public HashMap<String, UUID> members;
+    private HashMap<String, UUID> members;
+    private String ownerName;
 
     /** Constructor for GroupChat
      *
      * @param id UUID of this GroupChat
-     * @param ownerID UUID of owner of GroupChat
+     * @param ownerId User of owner of GroupChat
      * @param title Title of this GroupChat
      * @param creation Instant creation time of this GroupChat
+     * @param ownerName String username of owner of GroupChat
      *
      * Note: this constructor does not add this groupchat to the owner's groupchat map
      */
-    public GroupChat(UUID id, UUID ownerID, String title, Instant creation) {
-        super(id, ownerID, title, creation);
+//    public GroupChat(UUID id, UUID ownerID, String title, Instant creation) {
+//        super(id, ownerID, title, creation);
+//        members = new HashMap<>();
+//        members.put(title, ownerID);
+//    }
+
+    public GroupChat(UUID id, UUID ownerId, String title, Instant creation, String ownerName) {
+        super(id, ownerId, title, creation);
         members = new HashMap<>();
-        members.put(title, ownerID);
+        members.put(ownerName, ownerId);
+        this.ownerName = ownerName;
     }
 
     public HashMap<String, UUID> getMembers() {
         return members;
     }
 
+    public String getOwnerName() { return ownerName; }
+
     /** Adds a member to the group chat
      *  as for now anyone can add anyone
      **/
     public void addMember(User member) {
         if (member != null) {
-            members.put(getTitle(), member.getId());
-            member.addGroupChat(this);
+            members.put(member.getName(), member.getId());
         }
     }
 
@@ -55,10 +61,20 @@ public class GroupChat extends Conversation{
      **/
     public void removeMember(User member) {
         // do not allow leader to remove self from conversation as for now
-        if (member != null && member.getId() != this.owner) {
+        if (member != null && !(member.getName().equals(ownerName)) && members.containsKey(member.getName())) {
             members.remove(member.getName());
-            member.removeGroupChat(this);
         }
     }
 
+    public void removeMember(String memberName) {
+        if (!memberName.equals(ownerName) && members.containsKey(memberName)) {
+            members.remove(memberName);
+        }
+    }
+
+    public boolean containsMember(User member) {
+        return members.containsKey(member.getName());
+    }
+
+    public boolean containsMember(String memberName) { return members.containsKey(memberName); }
 }

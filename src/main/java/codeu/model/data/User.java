@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.HashSet;
 
 /** Class representing a registered user. */
 public class User {
@@ -29,7 +28,7 @@ public class User {
   private final Instant creation;
   private final HashMap<String, UUID> followingMap;
   private boolean admin;
-  private final HashMap<String, UUID> groupChatMap;
+//  private final HashMap<String, UUID> groupChatMap;
 
   /**
    * Constructs a new User. Makes user follow themselves by default. 
@@ -44,8 +43,8 @@ public class User {
     this.name = name;
     this.password = password;
     this.creation = creation;
-    this.followingMap = new HashMap<String, UUID>();
-    this.groupChatMap = new HashMap<String, UUID>();
+    this.followingMap = new HashMap<>();
+//    this.groupChatMap = new HashMap<>();
     followingMap.put(name, id);
 
     List<String> admins = Arrays.asList("lloza", "cari", "joyaan", "linda");
@@ -110,23 +109,23 @@ public class User {
   public void removeAdmin() {admin = false;}
 
   /** checks if user is in the group chat and returns true if user is **/
-  public boolean inGroupChat(GroupChat groupChat) { return groupChatMap.containsKey(groupChat.title); }
-
-  /** adds a groupchat to the set of groupchats the user is in **/
-  public void addGroupChat(GroupChat groupChat) {
-    if (groupChat != null) {
-      groupChatMap.put(groupChat.title, groupChat.id);
-    }
-  }
-
-  /** removes a groupchat from the set of groupchats the user is in**/
-  public void removeGroupChat(GroupChat groupChat) {
-    groupChatMap.remove(groupChat.title, groupChat.id);
-  }
-
-  /** returns the list of group chats that the user is in **/
-  public HashMap<String, UUID> getGroupChatMap() {
-    return groupChatMap;
-  }
+  public boolean inGroupChat(GroupChat groupChat) { return groupChat.containsMember(name); }
+//
+//  /** adds a groupchat to the set of groupchats the user is in **/
+//  public void addGroupChat(GroupChat groupChat) {
+//    if (groupChat != null) {
+//      groupChatMap.put(groupChat.title, groupChat.id);
+//    }
+//  }
+//
+//  /** removes a groupchat from the set of groupchats the user is in**/
+//  public void removeGroupChat(GroupChat groupChat) {
+//    groupChatMap.remove(groupChat.title, groupChat.id);
+//  }
+//
+//  /** returns the list of group chats that the user is in **/
+//  public HashMap<String, UUID> getGroupChatMap() {
+//    return groupChatMap;
+//  }
 
 }

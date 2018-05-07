@@ -42,7 +42,7 @@ public class GroupChatTest {
     HashMap<String, UUID> testMap = new HashMap<>();
     testMap.put(title, idUser);
 
-     GroupChat groupChat = new GroupChat(id, idUser, title, creation);
+     GroupChat groupChat = new GroupChat(id, idUser, title, creation, name);
 
      Assert.assertEquals(id, groupChat.getId());
      Assert.assertEquals(idUser, groupChat.getOwnerId());
