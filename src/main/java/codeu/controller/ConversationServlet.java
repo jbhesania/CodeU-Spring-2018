@@ -168,7 +168,6 @@ public class ConversationServlet extends HttpServlet {
         }
       }
 
-
       conversationStore.addConversation(groupChat);
       response.sendRedirect("/chat/" + conversationTitle);
     }
