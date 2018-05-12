@@ -21,6 +21,17 @@
 <head>
   <title>Conversations</title>
   <link rel="stylesheet" href="/css/main.css">
+  <style>
+    form{
+      margin: 10px 0px 10px 0px;
+    }
+    button{
+      margin: 10px 0px 10px 0px;
+    }
+    input{
+      margin: 5px 0px 5px 0px;
+    }
+  </style>
 </head>
 <body>
 
@@ -37,10 +48,26 @@
       <form action="/conversations" method="POST">
           <div class="form-group">
             <label class="form-control-label">Title:</label>
-          <input type="text" name="conversationTitle">
+            <input type="text" name="conversationTitle">
+          </div>
+        <button type="submit" name="chat">Create</button>
+      </form>
+
+      <hr>
+
+      <h1>New Group Chat</h1>
+      <form action="/conversations" method="POST">
+          <div class="form-group">
+            <label class="form-control-label">Group Name:</label>
+            <input type="text" name="conversationTitle">
+            <br>
+            <label class="form-control-label">Group Members:</label>
+            <input type="text" name="members">
+            <br>
+            Please separate member usernames with commas (Ex: "lloza, cari, joyaan, linda")
         </div>
 
-        <button type="submit">Create</button>
+        <button type="submit" name="group">Create Group Chat</button>
       </form>
 
       <hr/>

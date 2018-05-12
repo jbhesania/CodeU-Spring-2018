@@ -84,39 +84,92 @@ public class ConversationServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String username = (String) request.getSession().getAttribute("user");
-    if (username == null) {
-      // user is not logged in, don't let them create a conversation
-      response.sendRedirect("/conversations");
-      return;
-    }
-
-    User user = userStore.getUser(username);
-    if (user == null) {
-      // user was not found, don't let them create a conversation
-      System.out.println("User not found: " + username);
-      response.sendRedirect("/conversations");
-      return;
-    }
-
-    String conversationTitle = request.getParameter("conversationTitle");
-    if (!conversationTitle.matches("[\\w*]*")) {
-      request.setAttribute("error", "Please enter only letters and numbers.");
-      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
-      return;
-    }
-
-    if (conversationStore.isTitleTaken(conversationTitle)) {
-      // conversation title is already taken, just go into that conversation instead of creating a
-      // new one
+    //Checks if regular conversation form was filled out and submitted
+    if (request.getParameter("chat") != null) {
+      String username = (String) request.getSession().getAttribute("user");
+      if (username == null) {
+        // user is not logged in, don't let them create a conversation
+        response.sendRedirect("/conversations");
+        return;
+      }
+  
+      User user = userStore.getUser(username);
+      if (user == null) {
+        // user was not found, don't let them create a conversation
+        System.out.println("User not found: " + username);
+        response.sendRedirect("/conversations");
+        return;
+      }
+      
+      String conversationTitle = request.getParameter("conversationTitle");
+      if (!conversationTitle.matches("[\\w*]*")) {
+        request.setAttribute("error", "Please enter only letters and numbers.");
+        request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+        return;
+      }
+  
+      if (conversationStore.isTitleTaken(conversationTitle)) {
+        // conversation title is already taken, just go into that conversation instead of creating a
+        // new one
+        response.sendRedirect("/chat/" + conversationTitle);
+        return;
+      }
+  
+      Conversation conversation =
+          new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+  
+      conversationStore.addConversation(conversation);
       response.sendRedirect("/chat/" + conversationTitle);
-      return;
     }
+    //Checks if group chat form was filled out and submitted
+    else if(request.getParameter("group") != null){
 
-    Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+      // Session User is the creator of the groupChat
+      String username = (String) request.getSession().getAttribute("user");
+      if (username == null) {
+        // user is not logged in, don't let them create a conversation
+        response.sendRedirect("/conversations");
+        return;
+      }
+  
+      User user = userStore.getUser(username);
+      if (user == null) {
+        System.out.println("User not found: " + username);
+        response.sendRedirect("/conversations");
+        return;
+      }
+   
+      // Check for valid conversation title that has not been taken
+      String conversationTitle = request.getParameter("conversationTitle");
+      if (!conversationTitle.matches("[\\w*]*")) {
+        request.setAttribute("error", "Please enter only letters and numbers.");
+        request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+        return;
+      }
+  
+      if (conversationStore.isTitleTaken(conversationTitle)) {
+        // conversation title is already taken, visit already created one
+        response.sendRedirect("/chat/" + conversationTitle);
+        return;
+      }
+      
+      GroupChat groupChat = 
+        newGroupChat(UUID.randomUUID(), User.getId(), user, conversationTitle, Instant.now());
 
-    conversationStore.addConversation(conversation);
-    response.sendRedirect("/chat/" + conversationTitle);
+      String membersList = request.getParameter("members");
+      String[] membersArr = membersList.split(",");
+      for(String memberName: membersArr) {
+        User member = userStore.getUser(memberName.trim());
+        if(member == null) {
+          System.out.println("User not found: " + username);
+        }
+        else {
+          groupChat.addMember(member);
+        }
+      }
+
+      conversationStore.addConversation(groupChat);
+      response.sendRedirect("/chat/" + conversationTitle);
+    }
   }
 }
