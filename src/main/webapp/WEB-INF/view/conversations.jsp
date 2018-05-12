@@ -40,7 +40,7 @@
           <input type="text" name="conversationTitle">
         </div>
 
-        <button type="submit">Create</button>
+        <button type="submit" name="chat">Create</button>
       </form>
 
       <hr/>

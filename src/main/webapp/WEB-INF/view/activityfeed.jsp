@@ -7,9 +7,17 @@
   <%@ page import ="java.util.List"%>
   <style>
     label {
-      display: inline-block;
-      width: 100px;
+        display: inline-block;
+        width: 100px;
     }
+    .mdl-list {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        background-color: white;
+        height: 500px;
+        overflow-y: scroll
+    }
+
   </style>
   </head>
   <body>
@@ -18,6 +26,7 @@
 
     <div id="container">
         <h1> Activity Feed </h1>
+        <hr>
 
             <% if(request.getAttribute("error") != null){ %>
 
