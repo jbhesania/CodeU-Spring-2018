@@ -84,8 +84,6 @@ public class ConversationServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    //Checks if regular conversation form was filled out and submitted
-    // if (request.getParameter("chat") != null) {
       String username = (String) request.getSession().getAttribute("user");
       if (username == null) {
         // user is not logged in, don't let them create a conversation
@@ -120,45 +118,6 @@ public class ConversationServlet extends HttpServlet {
   
       conversationStore.addConversation(conversation);
       response.sendRedirect("/chat/" + conversationTitle);
-    // }
-
-    // //Checks if group chat form was filled out and submitted
-    // else if(request.getParameter("group") != null){
-
-    //   String username = (String) request.getSession().getAttribute("user");
-    //   if (username == null) {
-    //     // user is not logged in, don't let them create a conversation
-    //     response.sendRedirect("/conversations");
-    //     return;
-    //   }
-  
-    //   User user = userStore.getUser(username);
-    //   if (user == null) {
-    //     // user was not found, don't let them create a conversation
-    //     System.out.println("User not found: " + username);
-    //     response.sendRedirect("/conversations");
-    //     return;
-    //   }
-      
-    //   String conversationTitle = request.getParameter("conversationTitle");
-    //   if (!conversationTitle.matches("[\\w*]*")) {
-    //     request.setAttribute("error", "Please enter only letters and numbers.");
-    //     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
-    //     return;
-    //   }
-  
-    //   if (conversationStore.isTitleTaken(conversationTitle)) {
-    //     // conversation title is already taken, just go into that conversation instead of creating a
-    //     // new one
-    //     response.sendRedirect("/chat/" + conversationTitle);
-    //     return;
-    //   }
-  
-    //   GroupChat groupchat = 
-    //     newGroupChat(UUID.randomUUID(), User.getID(), user, Instant.now());
-  
-    //   conversationStore.addConversation(conversation);
-    //   response.sendRedirect("/chat/" + conversationTitle);
     // }
   }
 }
