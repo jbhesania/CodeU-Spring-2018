@@ -16,6 +16,7 @@ package codeu.controller;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
+import codeu.model.data.GroupChat;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
@@ -154,14 +155,18 @@ public class ConversationServlet extends HttpServlet {
       }
       
       GroupChat groupChat = 
-        newGroupChat(UUID.randomUUID(), User.getId(), user, conversationTitle, Instant.now());
+        new GroupChat(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), user.getName());
 
       String membersList = request.getParameter("members");
       String[] membersArr = membersList.split(",");
+      groupChat.addMember(user);
       for(String memberName: membersArr) {
+        if(memberName.equals(username)){
+          continue;
+        }
         User member = userStore.getUser(memberName.trim());
         if(member == null) {
-          System.out.println("User not found: " + username);
+          System.out.println("User not found: " + memberName);
         }
         else {
           groupChat.addMember(member);
