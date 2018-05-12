@@ -40,7 +40,7 @@ public class GroupChatTest {
 
     //hashmap for testing
     HashMap<String, UUID> testMap = new HashMap<>();
-    testMap.put(title, idUser);
+    testMap.put(name, idUser);
 
      GroupChat groupChat = new GroupChat(id, idUser, title, creation, name);
 

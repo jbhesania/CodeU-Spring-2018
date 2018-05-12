@@ -130,9 +130,7 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(chatCreationOne, resultGroupChat.getCreationTime());
 
     // group chat contains user one, not user two
-//    Assert.assertTrue(resultUserOne.inGroupChat(resultGroupChat));
     Assert.assertTrue(resultGroupChat.containsMember(resultUserOne.getName()));
-//    Assert.assertFalse(resultUserTwo.inGroupChat(resultGroupChat));
     Assert.assertFalse(resultGroupChat.containsMember(resultUserTwo.getName()));
 
     // add in another user

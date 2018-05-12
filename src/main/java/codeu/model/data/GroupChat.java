@@ -18,11 +18,6 @@ public class GroupChat extends Conversation{
      *
      * Note: this constructor does not add this groupchat to the owner's groupchat map
      */
-//    public GroupChat(UUID id, UUID ownerID, String title, Instant creation) {
-//        super(id, ownerID, title, creation);
-//        members = new HashMap<>();
-//        members.put(title, ownerID);
-//    }
 
     public GroupChat(UUID id, UUID ownerId, String title, Instant creation, String ownerName) {
         super(id, ownerId, title, creation);

@@ -44,7 +44,6 @@ public class User {
     this.password = password;
     this.creation = creation;
     this.followingMap = new HashMap<>();
-//    this.groupChatMap = new HashMap<>();
     followingMap.put(name, id);
 
     List<String> admins = Arrays.asList("lloza", "cari", "joyaan", "linda");
@@ -110,22 +109,4 @@ public class User {
 
   /** checks if user is in the group chat and returns true if user is **/
   public boolean inGroupChat(GroupChat groupChat) { return groupChat.containsMember(name); }
-//
-//  /** adds a groupchat to the set of groupchats the user is in **/
-//  public void addGroupChat(GroupChat groupChat) {
-//    if (groupChat != null) {
-//      groupChatMap.put(groupChat.title, groupChat.id);
-//    }
-//  }
-//
-//  /** removes a groupchat from the set of groupchats the user is in**/
-//  public void removeGroupChat(GroupChat groupChat) {
-//    groupChatMap.remove(groupChat.title, groupChat.id);
-//  }
-//
-//  /** returns the list of group chats that the user is in **/
-//  public HashMap<String, UUID> getGroupChatMap() {
-//    return groupChatMap;
-//  }
-
 }
