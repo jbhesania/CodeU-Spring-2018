@@ -84,7 +84,7 @@ public class ConversationServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-        //Checks if regular conversation form was filled out and submitted
+    //Checks if regular conversation form was filled out and submitted
     // if (request.getParameter("chat") != null) {
       String username = (String) request.getSession().getAttribute("user");
       if (username == null) {
