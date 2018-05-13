@@ -21,6 +21,7 @@
 <head>
   <title>Conversations</title>
   <link rel="stylesheet" href="/css/main.css">
+<<<<<<< HEAD
   <style>
     form{
       margin: 10px 0px 10px 0px;
@@ -32,6 +33,8 @@
       margin: 5px 0px 5px 0px;
     }
   </style>
+=======
+>>>>>>> parent of 66ae662... form
 </head>
 <body>
 
@@ -51,6 +54,7 @@
           <input type="text" name="conversationTitle">
         </div>
 
+<<<<<<< HEAD
         <button type="submit" name="chat">Create</button>
       </form>
 
@@ -69,6 +73,9 @@
         </div>
 
         <button type="submit" name="group">Create Group Chat</button>
+=======
+        <button type="submit">Create</button>
+>>>>>>> parent of 66ae662... form
       </form>
 
       <hr/>
