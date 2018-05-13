@@ -22,6 +22,7 @@
   <title>Conversations</title>
   <link rel="stylesheet" href="/css/main.css">
 <<<<<<< HEAD
+<<<<<<< HEAD
   <style>
     form{
       margin: 10px 0px 10px 0px;
@@ -35,6 +36,8 @@
   </style>
 =======
 >>>>>>> parent of 66ae662... form
+=======
+>>>>>>> 0fb2eb3edfde506b0f3faf3d2cac070608d78e76
 </head>
 <body>
 
@@ -58,6 +61,7 @@
         <button type="submit" name="chat">Create</button>
       </form>
 
+<<<<<<< HEAD
       <hr>
 
       <h1>New Group Chat</h1>
@@ -78,6 +82,8 @@
 >>>>>>> parent of 66ae662... form
       </form>
 
+=======
+>>>>>>> 0fb2eb3edfde506b0f3faf3d2cac070608d78e76
       <hr/>
     <% } %>
 
