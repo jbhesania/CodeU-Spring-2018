@@ -21,7 +21,8 @@ body {
   font-size: 18px;
   line-height: 1.6;
   color: #444;
-  background-color: #fffcc2;
+  background-image: url("avocado31.jpg");
+  background-repeat: repeat;
 }
 
 nav {
@@ -30,6 +31,12 @@ nav {
   top: 0;
   left: 0;
   background-color: #708E29;
+}
+
+div{
+  background-color: rgba(166, 241, 44, 0.281);
+  padding: 0px 15px 15px 15px;
+  border-radius: 15px;
 }
 
 hr{
