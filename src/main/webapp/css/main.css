@@ -30,11 +30,11 @@ nav {
   width: 100%;
   top: 0;
   left: 0;
-  background-color: #708E29;
+  background-color: rgb(112, 138, 53);
 }
 
 div{
-  background-color: rgba(166, 241, 44, 0.281);
+  background-color: rgba(171, 219, 82, 0.582);
   padding: 0px 15px 15px 15px;
   border-radius: 15px;
 }
