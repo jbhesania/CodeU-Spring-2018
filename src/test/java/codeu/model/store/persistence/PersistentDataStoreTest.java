@@ -83,7 +83,7 @@ public class PersistentDataStoreTest {
   }
 
   @Test
-  public void testGroupChat() throws PersistentDataStoreException {
+  public void testSaveAndLoadGroupChats() throws PersistentDataStoreException {
     UUID userIdOne = UUID.randomUUID();
     String usernameOne = "test_username_one";
     Instant userCreationOne = Instant.ofEpochMilli(1000);
