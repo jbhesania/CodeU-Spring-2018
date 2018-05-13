@@ -15,6 +15,8 @@
 --%>
 <%@ page import="java.util.List" %>
 <%@ page import="codeu.model.data.Conversation" %>
+<%@ page import="codeu.model.data.GroupChat" %>
+<%@ page import="java.util.ArrayList" %>
 
 <!DOCTYPE html>
 <html>
@@ -51,6 +53,8 @@
     <%
     List<Conversation> conversations =
       (List<Conversation>) request.getAttribute("conversations");
+    List<GroupChat> groupChats = new ArrayList<>();
+
     if(conversations == null || conversations.isEmpty()){
     %>
       <p>Create a conversation to get started.</p>
@@ -60,11 +64,16 @@
     %>
       <ul class="mdl-list">
     <%
-      for(Conversation conversation : conversations){
+     for(Conversation conversation : conversations){
+
+        if (conversation instanceof GroupChat) {
+            groupChats.add((GroupChat) conversation);
+        } else {
     %>
-      <li><a href="/chat/<%= conversation.getTitle() %>">
-        <%= conversation.getTitle() %></a></li>
+          <li><a href="/chat/<%= conversation.getTitle() %>">
+            <%= conversation.getTitle() %></a></li>
     <%
+        }
       }
     %>
       </ul>
@@ -72,6 +81,32 @@
     }
     %>
     <hr/>
+
+    <h1>Group Chats</h1>
+
+    <%
+    if( groupChats == null || groupChats.isEmpty()){
+    %>
+      <p>Create a group chat to get started.</p>
+    <% } else { %>
+      <ul class="mdl-list">
+    <%
+      for(GroupChat groupChat : groupChats){
+        String username = String.valueOf(request.getSession().getAttribute("user"));
+        if (groupChat.containsMember(username)) {
+    %>
+          <li><a href="/chat/<%= groupChat.getTitle() %>">
+            <%= groupChat.getTitle() %></a></li>
+    <%
+        }
+      }
+    %>
+      </ul>
+    <%
+    }
+    %>
+    <hr/>
+
   </div>
 </body>
 </html>

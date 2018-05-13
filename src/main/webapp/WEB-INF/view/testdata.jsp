@@ -25,12 +25,17 @@
 
   <div id="container">
     <h1>Load Test Data</h1>
-    <p>This will load a number of users, conversations, and messages for testing
-        purposes.</p>
-    <form action="/testdata" method="POST">
-      <button type="submit" value="confirm" name="confirm">Confirm</button>
-      <button type="submit" value="cancel" name="cancel">Do Nothing</button>
-    </form>
+
+    <% if (request.getSession().getAttribute("admin") != null && (boolean) request.getSession().getAttribute("admin")) { %>
+        <p>This will load a number of users, conversations, and messages for testing
+            purposes.</p>
+        <form action="/testdata" method="POST">
+          <button type="submit" value="confirm" name="confirm">Confirm</button>
+          <button type="submit" value="cancel" name="cancel">Do Nothing</button>
+        </form>
+    <% } else { %>
+        <p> You do not have the permissions to view this page. </p>
+    <% } %>
   </div>
 </body>
 </html>
