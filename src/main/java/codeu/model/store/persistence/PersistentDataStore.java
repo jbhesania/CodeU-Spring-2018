@@ -15,15 +15,13 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.GroupChat;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import com.google.appengine.api.datastore.*;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -118,6 +116,47 @@ public class PersistentDataStore {
   }
 
   /**
+   * Loads all GroupChat objects from the Datastore service and returns them in a List.
+   *
+   * @throws PersistentDataStoreException if an error was detected during the load from the
+   *     Datastore service
+   */
+  public List<GroupChat> loadGroupChats() throws PersistentDataStoreException {
+
+    List<GroupChat> groupChats = new ArrayList<>();
+
+    // Retrieve all conversations from the datastore.
+    Query query = new Query("chat-groupchats");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        UUID uuid = UUID.fromString((String) entity.getProperty("uuid"));
+        UUID ownerId = UUID.fromString((String) entity.getProperty("owner_id"));
+        String title = (String) entity.getProperty("title");
+        Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
+        String ownerName = (String) entity.getProperty("owner_name");
+        GroupChat groupChat = new GroupChat(uuid, ownerId, title, creationTime, ownerName);
+        groupChats.add(groupChat);
+
+        EmbeddedEntity memberMap = (EmbeddedEntity) entity.getProperty("memberMap");
+        if (memberMap != null) {
+          for (String key : memberMap.getProperties().keySet()) {
+            groupChat.addMember(key, UUID.fromString((String) memberMap.getProperty(key)));
+          }
+        }
+      } catch (Exception e) {
+        // In a production environment, errors should be very rare. Errors which may
+        // occur include network errors, Datastore service errors, authorization errors,
+        // database entity definition mismatches, or service mismatches.
+        throw new PersistentDataStoreException(e);
+      }
+    }
+
+    return groupChats;
+  }
+
+  /**
    * Loads all Message objects from the Datastore service and returns them in a List.
    *
    * @throws PersistentDataStoreException if an error was detected during the load from the
@@ -162,11 +201,10 @@ public class PersistentDataStore {
     
     EmbeddedEntity embeddedHashTable = new EmbeddedEntity();
     HashMap<String, UUID> followMap = user.getFollowingMap();
-    for (String key : followMap.keySet()) { 
+    for (String key : followMap.keySet()) {
         embeddedHashTable.setProperty(key, followMap.get(key).toString());
     }
-    userEntity.setProperty("followingMap", embeddedHashTable);  
-
+    userEntity.setProperty("followingMap", embeddedHashTable);
     datastore.put(userEntity);
   }
 
@@ -189,5 +227,24 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     datastore.put(conversationEntity);
+  }
+
+  /** Write a GroupChat object to the Datastore service. */
+  public void writeThrough(GroupChat groupChat) {
+    Entity groupChatEntity = new Entity("chat-groupchats");
+    groupChatEntity.setProperty("uuid", groupChat.getId().toString());
+    groupChatEntity.setProperty("owner_id", groupChat.getOwnerId().toString());
+    groupChatEntity.setProperty("title", groupChat.getTitle());
+    groupChatEntity.setProperty("creation_time", groupChat.getCreationTime().toString());
+    groupChatEntity.setProperty("owner_name", groupChat.getOwnerName());
+
+    EmbeddedEntity embeddedHashTable = new EmbeddedEntity();
+    HashMap<String, UUID> members = groupChat.getMembers();
+    for (String key : members.keySet()) {
+      embeddedHashTable.setProperty(key, members.get(key).toString());
+    }
+    groupChatEntity.setProperty("memberMap", embeddedHashTable);
+
+    datastore.put(groupChatEntity);
   }
 }

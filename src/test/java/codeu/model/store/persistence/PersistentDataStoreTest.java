@@ -1,17 +1,19 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.GroupChat;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Test class for PersistentDataStore. The PersistentDataStore class relies on DatastoreService,
@@ -78,6 +80,69 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(creationTwo, resultUserTwo.getCreationTime());
     Assert.assertTrue(resultUserTwo.follows(resultUserTwo.getId()));
     Assert.assertTrue(resultUserTwo.follows(resultUserOne.getId()));
+  }
+
+  @Test
+  public void testSaveAndLoadGroupChats() throws PersistentDataStoreException {
+    UUID userIdOne = UUID.randomUUID();
+    String usernameOne = "test_username_one";
+    Instant userCreationOne = Instant.ofEpochMilli(1000);
+    String passwordOne = "test_password_one";
+    User inputUserOne = new User(userIdOne, usernameOne, passwordOne, userCreationOne);
+
+    UUID userIdTwo = UUID.randomUUID();
+    String usernameTwo = "test_username_two";
+    Instant userCreationTwo = Instant.ofEpochMilli(2000);
+    String passwordTwo = "test_password_two";
+    User inputUserTwo = new User(userIdTwo, usernameTwo, passwordTwo, userCreationTwo);
+
+    // save
+    persistentDataStore.writeThrough(inputUserOne);
+    persistentDataStore.writeThrough(inputUserTwo);
+
+    // load
+    List<User> resultUsers = persistentDataStore.loadUsers();
+
+    // confirm that what we saved matches what we loaded
+    User resultUserOne = resultUsers.get(0);
+    User resultUserTwo = resultUsers.get(1);
+    if(resultUserOne.getName().equals(usernameTwo)) {
+      resultUserOne = resultUsers.get(1);
+      resultUserTwo = resultUsers.get(0);
+    }
+
+    UUID chatIdOne = UUID.randomUUID();
+    UUID ownerOne = resultUserOne.getId();
+    String titleOne = "Test_Title";
+    Instant chatCreationOne = Instant.ofEpochMilli(1000);
+    String ownerOneName = resultUserOne.getName();
+    GroupChat inputGroupChat = new GroupChat(chatIdOne, ownerOne, titleOne, chatCreationOne, ownerOneName);
+
+    // save & load
+    persistentDataStore.writeThrough(inputGroupChat);
+    List<GroupChat> resultGroupChats = persistentDataStore.loadGroupChats();
+
+    // confirm that what we saved matches what we loaded
+    GroupChat resultGroupChat = resultGroupChats.get(0);
+    Assert.assertEquals(chatIdOne, resultGroupChat.getId());
+    Assert.assertEquals(ownerOne, resultGroupChat.getOwnerId());
+    Assert.assertEquals(titleOne, resultGroupChat.getTitle());
+    Assert.assertEquals(chatCreationOne, resultGroupChat.getCreationTime());
+
+    // group chat contains user one, not user two
+    Assert.assertTrue(resultGroupChat.containsMember(resultUserOne.getName()));
+    Assert.assertFalse(resultGroupChat.containsMember(resultUserTwo.getName()));
+
+    // add in another user
+    resultGroupChat.addMember(resultUserTwo.getName(), resultUserTwo.getId());
+    Assert.assertTrue(resultGroupChat.containsMember(resultUserOne.getName()));
+    Assert.assertTrue(resultGroupChat.containsMember(resultUserTwo.getName()));
+
+    // attempts to remove both users, resultUserOne should still be in it
+    resultGroupChat.removeMember(resultUserOne.getName());
+    resultGroupChat.removeMember(resultUserTwo.getName());
+    Assert.assertTrue(resultGroupChat.containsMember(resultUserOne.getName()));
+    Assert.assertFalse(resultGroupChat.containsMember(resultUserTwo.getName()));
   }
 
   @Test

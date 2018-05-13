@@ -28,6 +28,7 @@ public class User {
   private final Instant creation;
   private final HashMap<String, UUID> followingMap;
   private boolean admin;
+//  private final HashMap<String, UUID> groupChatMap;
 
   /**
    * Constructs a new User. Makes user follow themselves by default. 
@@ -42,7 +43,7 @@ public class User {
     this.name = name;
     this.password = password;
     this.creation = creation;
-    this.followingMap = new HashMap<String, UUID>();
+    this.followingMap = new HashMap<>();
     followingMap.put(name, id);
 
     List<String> admins = Arrays.asList("lloza", "cari", "joyaan", "linda");
@@ -105,4 +106,7 @@ public class User {
   public void makeAdmin() {admin = true;}
 
   public void removeAdmin() {admin = false;}
+
+  /** checks if user is in the group chat and returns true if user is **/
+  public boolean inGroupChat(GroupChat groupChat) { return groupChat.containsMember(name); }
 }
