@@ -16,6 +16,7 @@ package codeu.controller;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.User;
+import codeu.model.data.GroupChat;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
@@ -83,6 +84,9 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+
+    //Checks if regular conversation form was filled out and submitted
+    if (request.getParameter("chat") != null) {
       String username = (String) request.getSession().getAttribute("user");
       if (username == null) {
         // user is not logged in, don't let them create a conversation
@@ -117,6 +121,60 @@ public class ConversationServlet extends HttpServlet {
   
       conversationStore.addConversation(conversation);
       response.sendRedirect("/chat/" + conversationTitle);
-    // }
+    }
+    //Checks if group chat form was filled out and submitted
+    else if(request.getParameter("group") != null){
+
+      // Session User is the creator of the groupChat
+      String username = (String) request.getSession().getAttribute("user");
+      if (username == null) {
+        // user is not logged in, don't let them create a conversation
+        response.sendRedirect("/conversations");
+        return;
+      }
+  
+      User user = userStore.getUser(username);
+      if (user == null) {
+        System.out.println("User not found: " + username);
+        response.sendRedirect("/conversations");
+        return;
+      }
+   
+      // Check for valid conversation title that has not been taken
+      String conversationTitle = request.getParameter("conversationTitle");
+      if (!conversationTitle.matches("[\\w*]*")) {
+        request.setAttribute("error", "Please enter only letters and numbers.");
+        request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+        return;
+      }
+  
+      if (conversationStore.isTitleTaken(conversationTitle)) {
+        // conversation title is already taken, visit already created one
+        response.sendRedirect("/chat/" + conversationTitle);
+        return;
+      }
+      
+      GroupChat groupChat = 
+        new GroupChat(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), user.getName());
+
+      String membersList = request.getParameter("members");
+      String[] membersArr = membersList.split(",");
+      groupChat.addMember(user);
+      for(String memberName: membersArr) {
+        if(memberName.equals(username)){
+          continue;
+        }
+        User member = userStore.getUser(memberName.trim());
+        if(member == null) {
+          System.out.println("User not found: " + memberName);
+        }
+        else {
+          groupChat.addMember(member);
+        }
+      }
+
+      conversationStore.addConversation(groupChat);
+      response.sendRedirect("/chat/" + conversationTitle);
+    }
   }
 }
