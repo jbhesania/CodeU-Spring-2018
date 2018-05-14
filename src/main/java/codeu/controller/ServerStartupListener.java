@@ -8,9 +8,10 @@ import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.util.List;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.List;
 
 /**
  * Listener class that fires when the server first starts up, before any servlet classes are
@@ -26,6 +27,7 @@ public class ServerStartupListener implements ServletContextListener {
       UserStore.getInstance().setUsers(users);
 
       List<Conversation> conversations = PersistentStorageAgent.getInstance().loadConversations();
+      conversations.addAll(PersistentStorageAgent.getInstance().loadGroupChats());
       ConversationStore.getInstance().setConversations(conversations);
 
       List<Message> messages = PersistentStorageAgent.getInstance().loadMessages();

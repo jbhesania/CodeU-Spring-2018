@@ -1,13 +1,15 @@
 package codeu.model.store.persistence;
 
 import codeu.model.data.Conversation;
+import codeu.model.data.GroupChat;
 import codeu.model.data.Message;
 import codeu.model.data.User;
-import java.time.Instant;
-import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.time.Instant;
+import java.util.UUID;
 
 /**
  * Contains tests of the PersistentStorageAgent class. Currently that class is just a pass-through
@@ -39,6 +41,12 @@ public class PersistentStorageAgentTest {
   }
 
   @Test
+  public void testLoadGroupChats() throws PersistentDataStoreException {
+    persistentStorageAgent.loadGroupChats();
+    Mockito.verify(mockPersistentDataStore).loadGroupChats();
+  }
+
+  @Test
   public void testLoadMessages() throws PersistentDataStoreException {
     persistentStorageAgent.loadMessages();
     Mockito.verify(mockPersistentDataStore).loadMessages();
@@ -57,6 +65,14 @@ public class PersistentStorageAgentTest {
         new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now());
     persistentStorageAgent.writeThrough(conversation);
     Mockito.verify(mockPersistentDataStore).writeThrough(conversation);
+  }
+
+  @Test
+  public void testWriteThroughGroupChat() {
+    GroupChat groupChat =
+            new GroupChat(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "test_username");
+    persistentStorageAgent.writeThrough(groupChat);
+    Mockito.verify(mockPersistentDataStore).writeThrough(groupChat);
   }
 
   @Test

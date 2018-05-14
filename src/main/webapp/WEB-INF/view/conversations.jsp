@@ -66,7 +66,6 @@
             <br>
             Please separate member usernames with commas (Ex: "lloza, cari, joyaan, linda")
         </div>
-
         <button type="submit" name="group">Create Group Chat</button>
       </form>
 

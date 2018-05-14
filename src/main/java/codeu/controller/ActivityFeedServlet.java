@@ -3,10 +3,6 @@ package codeu.controller;
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
-
-import java.time.Instant;
-import java.util.*;
-
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
 
@@ -15,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.*;
 
 /**
  * Servlet class responsible for the activity feed
