@@ -66,28 +66,34 @@ public class LoginServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    String username = request.getParameter("username");
-    String password = request.getParameter("password");
+    if (request.getParameter("login") != null) {
+      String username = request.getParameter("username");
+      String password = request.getParameter("password");
 
-    if (username == null || password == null) {
-      request.setAttribute("error", "Missing username or password.");
-      request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
-      return;
-    }
-    if (userStore.isUserRegistered(username)) {
-      User user = userStore.getUser(username);
-      if(BCrypt.checkpw(password, user.getPassword())) {
-        request.getSession().setAttribute("user", username);
-        request.getSession().setAttribute("admin", user.isAdmin());
-        response.sendRedirect("/conversations");
+      if (username == null || password == null) {
+        request.setAttribute("error", "Missing username or password.");
+        request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+        return;
+      }
+      if (userStore.isUserRegistered(username)) {
+        User user = userStore.getUser(username);
+        if(BCrypt.checkpw(password, user.getPassword())) {
+          request.getSession().setAttribute("user", username);
+          request.getSession().setAttribute("admin", user.isAdmin());
+          response.sendRedirect("/conversations");
+        }
+        else {
+          request.setAttribute("error", "Invalid password.");
+          request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
+        }
       }
       else {
-        request.setAttribute("error", "Invalid password.");
+        request.setAttribute("error", "Invalid username.");
         request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
       }
     }
-    else {
-      request.setAttribute("error", "Invalid username.");
+    else{
+ 			request.getSession().setAttribute("user", null);
       request.getRequestDispatcher("/WEB-INF/view/login.jsp").forward(request, response);
     }
   }

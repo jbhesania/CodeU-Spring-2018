@@ -54,6 +54,7 @@ public class LoginServletTest {
 
   @Test
   public void testDoPost_nullUsername() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("login")).thenReturn("true");
     Mockito.when(mockRequest.getParameter("username")).thenReturn(null);
     Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");
 
@@ -71,6 +72,7 @@ public class LoginServletTest {
 
   @Test
   public void testDoPost_nullPassword() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("login")).thenReturn("true");
     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
     Mockito.when(mockRequest.getParameter("password")).thenReturn(null);
 
@@ -88,6 +90,7 @@ public class LoginServletTest {
 
   @Test
   public void testDoPost_NewUser() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("login")).thenReturn("true");
     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
     Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");
 
@@ -106,6 +109,7 @@ public class LoginServletTest {
 
   @Test
   public void testDoPost_WrongPassword() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("login")).thenReturn("true");
     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
     Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");
 
@@ -130,6 +134,7 @@ public class LoginServletTest {
 
   @Test
   public void testDoPost_ExistingUser() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("login")).thenReturn("true");
     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
     Mockito.when(mockRequest.getParameter("password")).thenReturn("test password");
 
@@ -150,5 +155,18 @@ public class LoginServletTest {
 
     Mockito.verify(mockSession).setAttribute("user", "test username");
     Mockito.verify(mockResponse).sendRedirect("/conversations");
+  }
+
+  @Test
+  public void test_LogOut() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("logout")).thenReturn("true");
+
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+
+    loginServlet.doPost(mockRequest, mockResponse);
+
+	  Mockito.verify(mockSession).setAttribute("user", null);
+    Mockito.verify(mockRequest).getRequestDispatcher("/WEB-INF/view/login.jsp");
   }
 }
